@@ -5,7 +5,7 @@ export default class Header extends Component {
     return (
       <>
         <h1>Neural Delivery</h1>
-        <p>Train your memory and never embarrass yourself at a potluck again</p>;
+        <p>Train your memory and never embarrass yourself at a potluck again</p>
       </>
     );
   }
