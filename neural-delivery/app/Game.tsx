@@ -15,6 +15,10 @@ export default class Game extends Component {
 }
 
 const gridAndControlsContainer = css({
+  backgroundColor: "#0066b2",
   display: "flex",
   width: "100%",
+  padding: "1rem",
+  justifyContent: "center",
+  alignItems: "center",
 });

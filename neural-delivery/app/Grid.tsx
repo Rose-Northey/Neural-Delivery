@@ -9,22 +9,28 @@ export default class Grid extends Component {
     super(props);
     this.cardStack = [
       { uniqueId: 1, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 1, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 1, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 1, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 1, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 1, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 1, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 1, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 2, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 3, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 4, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 5, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 6, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 7, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 8, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 9, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 10, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 11, cardNumber: 1, src: ".public/duck.jpg" },
+      { uniqueId: 12, cardNumber: 1, src: ".public/duck.jpg" },
     ];
   }
+  RandomiseCards = () => {};
+
+  GenerateCards = () => {};
 
   render() {
     return (
       <>
         {/* map over all of the cards */}
         <div className={grid}>
-          <Card />
           {this.cardStack.map((cardInStack) => {
             return <Card />;
           })}
@@ -37,7 +43,8 @@ export default class Grid extends Component {
 const grid = css({
   display: "flex",
   flexWrap: "wrap",
-  gap: "1rem",
+  maxWidth: "40rem",
+  gap: "0.5rem",
   "& img": {
     width: "150px",
   },
