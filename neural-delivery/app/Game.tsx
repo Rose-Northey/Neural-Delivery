@@ -5,7 +5,7 @@ import { css } from "@emotion/css";
 
 export default class Game extends Component {
   render() {
-    const images = ["/images/duck.jpg", "/images/duck.jpg", "/images/duck.jpg", "/images/duck.jpg", "/images/duck.jpg", "/images/duck.jpg"];
+    const images = ["/images/unknown.jpg", "/images/duck.jpg", "/images/duck.jpg", "/images/duck.jpg", "/images/duck.jpg", "/images/duck.jpg"];
     return (
       <div className={gridAndControlsContainer}>
         <Grid images={images} />

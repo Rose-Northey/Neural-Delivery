@@ -3,8 +3,9 @@ import Card from "./Card";
 import { css } from "@emotion/css";
 
 type CardData = {
-  card: Card;
+  image: string;
   randomization: number;
+  id: number;
 };
 
 type GridProps = {
@@ -12,21 +13,19 @@ type GridProps = {
 };
 
 export default class Grid extends Component<GridProps> {
-  cardStack: CardData[];
+  cardStackData: CardData[];
 
   constructor(props: GridProps) {
     super(props);
-    this.cardStack = [];
-    this.cardStack = this.generateGrid(props.images);
+    this.cardStackData = [];
+    this.cardStackData = this.generateGrid(props.images);
   }
 
   generateGrid = (cardImages: string[]): CardData[] => {
     const newStack: CardData[] = [];
     cardImages.forEach((image) => {
-      const card1 = new Card({ image, id: this.cardStack.length + 1 });
-      const card2 = new Card({ image, id: this.cardStack.length + 2 });
-      const cardData1 = { card: card1, randomization: Math.random() };
-      const cardData2 = { card: card2, randomization: Math.random() };
+      const cardData1 = { image: image, id: cardImages.length, randomization: Math.random() };
+      const cardData2 = { image: image, id: cardImages.length + 1, randomization: Math.random() };
       newStack.push(cardData1, cardData2);
     });
     return this.orderCardsByRandomizationNumber(newStack);
@@ -73,8 +72,8 @@ export default class Grid extends Component<GridProps> {
     return (
       <>
         <div className={grid}>
-          {this.cardStack.map((cardInStack) => {
-            return cardInStack.card.render();
+          {this.cardStackData.map((cardData) => {
+            return <Card id={cardData.id} image={cardData.image} />;
           })}
         </div>
       </>
