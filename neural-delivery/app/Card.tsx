@@ -1,14 +1,20 @@
 import { css } from "@emotion/css";
 import { Component } from "react";
 
+interface NewCardProps {
+  image: string;
+  id: number;
+}
+
 export default class Card extends Component {
   image: string;
+  id: number;
   isMatched: boolean;
   isSelected: boolean;
-  constructor(props: number, image: string) {
-    super(props);
-    // this.image = image;
-    this.image = "/images/duck.jpg";
+  constructor(newCardProps: NewCardProps) {
+    super(newCardProps);
+    this.image = newCardProps.image;
+    this.id = newCardProps.id;
     this.isMatched = true;
     this.isSelected = false;
   }

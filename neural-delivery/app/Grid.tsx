@@ -3,28 +3,25 @@ import Card from "./Card";
 import { css } from "@emotion/css";
 
 export default class Grid extends Component {
-  cardStack: { uniqueId: number; cardNumber: number; src: string }[];
+  cardStack: Card[];
 
   constructor(props: number) {
     super(props);
-    this.cardStack = [
-      { uniqueId: 1, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 2, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 3, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 4, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 5, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 6, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 7, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 8, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 9, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 10, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 11, cardNumber: 1, src: ".public/duck.jpg" },
-      { uniqueId: 12, cardNumber: 1, src: ".public/duck.jpg" },
-    ];
+    this.cardStack = [];
   }
   RandomiseCards = () => {};
 
-  GenerateCards = () => {};
+  GenerateCardPair = (image: string) => {
+    const image1 = "/images/duck.jpg";
+  };
+
+  GenerateGrid = (cardImages: string[]) => {
+    cardImages.forEach((image) => {
+      const card = new Card({ image, id: this.cardStack.length + 1 });
+      const identicalCard = new Card({ image, id: this.cardStack.length + 2 });
+      this.cardStack.push(card, identicalCard);
+    });
+  };
 
   render() {
     return (
