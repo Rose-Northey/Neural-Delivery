@@ -6,15 +6,16 @@ interface NewCardProps {
   id: number;
 }
 
-export default class Card extends Component {
+export default class Card extends Component<NewCardProps> {
   image: string;
   id: number;
   isMatched: boolean;
   isSelected: boolean;
-  constructor(newCardProps: NewCardProps) {
-    super(newCardProps);
-    this.image = newCardProps.image;
-    this.id = newCardProps.id;
+
+  constructor(props: NewCardProps) {
+    super(props);
+    this.image = props.image;
+    this.id = props.id;
     this.isMatched = true;
     this.isSelected = false;
   }
@@ -23,7 +24,7 @@ export default class Card extends Component {
     return (
       <>
         {this.isSelected || this.isMatched ? (
-          <img src={this.image} className={this.isMatched ? undefined : style.isSelected} />
+          <img key={this.id} src={this.image} className={this.isMatched ? undefined : style.isSelected} />
         ) : (
           <img src="/images/unknown.jpg" />
         )}

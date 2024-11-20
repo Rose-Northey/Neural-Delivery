@@ -2,34 +2,79 @@ import { Component } from "react";
 import Card from "./Card";
 import { css } from "@emotion/css";
 
-export default class Grid extends Component {
-  cardStack: Card[];
+type CardData = {
+  card: Card;
+  randomization: number;
+};
 
-  constructor(props: number) {
+type GridProps = {
+  images: string[];
+};
+
+export default class Grid extends Component<GridProps> {
+  cardStack: CardData[];
+
+  constructor(props: GridProps) {
     super(props);
     this.cardStack = [];
+    this.cardStack = this.generateGrid(props.images);
   }
-  RandomiseCards = () => {};
 
-  GenerateCardPair = (image: string) => {
-    const image1 = "/images/duck.jpg";
-  };
-
-  GenerateGrid = (cardImages: string[]) => {
+  generateGrid = (cardImages: string[]): CardData[] => {
+    const newStack: CardData[] = [];
     cardImages.forEach((image) => {
-      const card = new Card({ image, id: this.cardStack.length + 1 });
-      const identicalCard = new Card({ image, id: this.cardStack.length + 2 });
-      this.cardStack.push(card, identicalCard);
+      const card1 = new Card({ image, id: this.cardStack.length + 1 });
+      const card2 = new Card({ image, id: this.cardStack.length + 2 });
+      const cardData1 = { card: card1, randomization: Math.random() };
+      const cardData2 = { card: card2, randomization: Math.random() };
+      newStack.push(cardData1, cardData2);
     });
+    return this.orderCardsByRandomizationNumber(newStack);
   };
 
+  orderCardsByRandomizationNumber(cards: CardData[], iPivot = 0, iLastInSortRange = cards.length - 1): CardData[] {
+    const iLastLower = this.findIndexOfLowerFromRight(cards, iPivot, iLastInSortRange);
+    const iFirstHigher = this.findIndexOfHigherFromLeft(cards, iPivot, iLastInSortRange);
+    if (!iLastLower) {
+      iPivot++;
+    } else if (!iFirstHigher) {
+      this.swapCards(cards, iPivot, iLastInSortRange);
+      iLastInSortRange--;
+    } else if (iFirstHigher > iLastLower) {
+      this.swapCards(cards, iPivot, iLastLower);
+    } else if (iFirstHigher < iLastLower) {
+      this.swapCards(cards, iFirstHigher, iLastLower);
+    }
+
+    if (iPivot < iLastInSortRange) {
+      return this.orderCardsByRandomizationNumber(cards, iPivot, iLastInSortRange);
+    }
+    return cards;
+  }
+  findIndexOfLowerFromRight(cardData: CardData[], iPivot: number, iLastInSortRange: number): number | undefined {
+    for (let i = iLastInSortRange; i > iPivot; i--)
+      if (cardData[i].randomization < cardData[iPivot].randomization) {
+        return i;
+      }
+  }
+  findIndexOfHigherFromLeft(cardData: CardData[], iPivot: number, iLastInSortRange: number): number | undefined {
+    for (let i = iPivot + 1; i <= iLastInSortRange; i++) {
+      if (cardData[i].randomization > cardData[iPivot].randomization) {
+        return i;
+      }
+    }
+  }
+  swapCards(cardData: CardData[], iOne: number, iTwo: number): void {
+    const oldOne = cardData[iOne];
+    cardData[iOne] = cardData[iTwo];
+    cardData[iTwo] = oldOne;
+  }
   render() {
     return (
       <>
-        {/* map over all of the cards */}
         <div className={grid}>
           {this.cardStack.map((cardInStack) => {
-            return <Card />;
+            return cardInStack.card.render();
           })}
         </div>
       </>
