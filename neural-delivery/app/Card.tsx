@@ -16,8 +16,8 @@ export default class Card extends Component<NewCardProps> {
     super(props);
     this.image = props.image;
     this.id = props.id;
-    this.isMatched = true;
-    this.isSelected = false;
+    this.isMatched = false;
+    this.isSelected = true;
   }
 
   render() {
@@ -26,7 +26,7 @@ export default class Card extends Component<NewCardProps> {
         {this.isSelected || this.isMatched ? (
           <img key={this.id} src={this.image} className={this.isMatched ? undefined : style.isSelected} />
         ) : (
-          <img src="/images/unknown.jpg" />
+          <img className={style.isUnknown} src="/images/unknown.jpg" />
         )}
       </>
     );
@@ -36,6 +36,9 @@ const style = {
   isSelected: css({
     opacity: "75%",
     boxShadow: "0 0 0 2px #FEBE10",
+  }),
+  isUnknown: css({
+    "&:hover": { boxShadow: "0 0 0 2px #7d90a1" },
   }),
 };
 

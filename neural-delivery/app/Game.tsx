@@ -16,6 +16,7 @@ export default class Game extends Component {
 }
 
 const gridAndControlsContainer = css({
+  minHeight: "90%",
   backgroundColor: "#0066b2",
   display: "flex",
   width: "100%",
