@@ -21,7 +21,6 @@ constructor(props:GameProps){
 }
 
 handleResetClick(){
-  console.log('called handleresetclick')
 this.setState({resetGrid:true},()=>{
   this.setState({resetGrid:false})
 })

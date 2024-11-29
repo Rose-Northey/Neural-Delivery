@@ -30,13 +30,11 @@ export default class Grid extends Component<GridProps,GridState> {
     }
   }
 
- 
-
   generateGrid = (cardImages: string[]): CardData[] => {
     const newStack: CardData[] = [];
     cardImages.forEach((image) => {
-      const cardData1 = { image: image, id: cardImages.length, randomization: Math.random() };
-      const cardData2 = { image: image, id: cardImages.length + 1, randomization: Math.random() };
+      const cardData1 = { image: image, id: newStack.length, randomization: Math.random() };
+      const cardData2 = { image: image, id: newStack.length + 1, randomization: Math.random() };
       newStack.push(cardData1, cardData2);
     });
     return this.orderCardsByRandomizationNumber(newStack);
