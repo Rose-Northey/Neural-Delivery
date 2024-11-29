@@ -10,16 +10,27 @@ type CardData = {
 
 type GridProps = {
   images: string[];
+  resetGrid: boolean
 };
+type GridState = {
+  cardStackData: CardData[]
+}
 
-export default class Grid extends Component<GridProps> {
-  cardStackData: CardData[];
-
+export default class Grid extends Component<GridProps,GridState> {
   constructor(props: GridProps) {
     super(props);
-    this.cardStackData = [];
-    this.cardStackData = this.generateGrid(props.images);
+    this.state = {
+      cardStackData:this.generateGrid(this.props.images)
+    }
   }
+
+  componentDidUpdate(prevProps: GridProps): void {
+    if(this.props.resetGrid && !prevProps.resetGrid){
+      this.setState({cardStackData: this.generateGrid(this.props.images)})
+    }
+  }
+
+ 
 
   generateGrid = (cardImages: string[]): CardData[] => {
     const newStack: CardData[] = [];
@@ -69,11 +80,14 @@ export default class Grid extends Component<GridProps> {
     cardData[iTwo] = oldOne;
   }
   render() {
+    if(!this.state.cardStackData){
+      return null
+    }
     return (
       <>
         <div className={grid}>
-          {this.cardStackData.map((cardData) => {
-            return <Card id={cardData.id} image={cardData.image} />;
+          {this.state.cardStackData.map((cardData) => {
+            return <Card key={cardData.id} id={cardData.id} image={cardData.image} />;
           })}
         </div>
       </>

@@ -1,9 +1,12 @@
 import { css } from "@emotion/css";
 import { Component } from "react";
 
-export default class Controls extends Component {
+interface ControlsProps{
+  onResetClick:()=>void
+}
+export default class Controls extends Component<ControlsProps> {
   moveCount: number;
-  constructor(props: number) {
+  constructor(props: ControlsProps) {
     super(props);
     this.moveCount = 3;
   }
@@ -13,7 +16,7 @@ export default class Controls extends Component {
         <div className={style.moveCountContainer}>
           MoveCount:<div className={style.countContainer}>{this.moveCount}</div>
         </div>
-        <button>New Game</button>
+        <button onClick={this.props.onResetClick}>New Game</button>
       </div>
     );
   }
