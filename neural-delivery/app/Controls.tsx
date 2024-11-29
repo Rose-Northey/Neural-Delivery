@@ -1,9 +1,9 @@
 import { css } from "@emotion/css";
 import { Component } from "react";
 
-interface ControlsProps{
-  onResetClick:()=>void
-}
+type ControlsProps = {
+  onResetClick: () => void;
+};
 export default class Controls extends Component<ControlsProps> {
   moveCount: number;
   constructor(props: ControlsProps) {

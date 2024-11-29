@@ -3,35 +3,42 @@ import Grid from "./Grid";
 import Controls from "./Controls";
 import { css } from "@emotion/css";
 
-interface GameProps{}
+interface GameProps {}
 
-interface GameState{
-  resetGrid:boolean;
-  numberMoves:number;
+interface GameState {
+  resetGrid: boolean;
+  numberMoves: number;
 }
 
 export default class Game extends Component<GameProps, GameState> {
-constructor(props:GameProps){
-  super(props)
-  this.state = {
-    resetGrid:false,
-    numberMoves: 0,
+  constructor(props: GameProps) {
+    super(props);
+    this.state = {
+      resetGrid: false,
+      numberMoves: 0,
+    };
+    this.handleResetClick = this.handleResetClick.bind(this);
   }
-  this.handleResetClick = this.handleResetClick.bind(this)
-}
 
-handleResetClick(){
-this.setState({resetGrid:true},()=>{
-  this.setState({resetGrid:false})
-})
-}
+  handleResetClick() {
+    this.setState({ resetGrid: true }, () => {
+      this.setState({ resetGrid: false });
+    });
+  }
 
   render() {
-    const images = ["/images/blackCat.jpg", "/images/horse.jpg", "/images/box.jpg", "/images/uke.jpg", "/images/plant.jpg", "/images/duck.jpg"];
+    const images = [
+      "/images/blackCat.jpg",
+      "/images/horse.jpg",
+      "/images/box.jpg",
+      "/images/uke.jpg",
+      "/images/plant.jpg",
+      "/images/duck.jpg",
+    ];
     return (
       <div className={gridAndControlsContainer}>
-        <Grid images={images} resetGrid={this.state.resetGrid}/>
-        <Controls onResetClick={this.handleResetClick}/>
+        <Grid images={images} resetGrid={this.state.resetGrid} />
+        <Controls onResetClick={this.handleResetClick} />
       </div>
     );
   }
@@ -47,4 +54,4 @@ const gridAndControlsContainer = css({
   alignItems: "center",
 });
 
-//add newGameClick function 
+//add newGameClick function
