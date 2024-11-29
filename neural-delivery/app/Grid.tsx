@@ -19,9 +19,9 @@ type GridState = {
 export default class Grid extends Component<GridProps, GridState> {
   constructor(props: GridProps) {
     super(props);
+
     this.state = { cardStackData: this.generateGrid(props.images) };
   }
-
   componentDidUpdate(prevProps: GridProps): void {
     if (this.props.resetGrid === true) {
       this.setState({ cardStackData: this.generateGrid(this.props.images) });
@@ -108,6 +108,9 @@ export default class Grid extends Component<GridProps, GridState> {
     cardData[iTwo] = oldOne;
   }
   render() {
+    if (!this.state.cardStackData) {
+      return null;
+    }
     return (
       <>
         <div className={grid}>

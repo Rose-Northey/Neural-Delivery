@@ -9,6 +9,7 @@ type GameState = {
   numberOfMoves: number;
   resetGrid: boolean;
 };
+
 export default class Game extends Component<GameProps, GameState> {
   constructor(props: GameProps) {
     super(props);
@@ -53,3 +54,5 @@ const gridAndControlsContainer = css({
   justifyContent: "center",
   alignItems: "center",
 });
+
+//add newGameClick function
