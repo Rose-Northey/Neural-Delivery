@@ -25,7 +25,7 @@ export default class Grid extends Component<GridProps, GridState> {
   }
 
   componentDidUpdate(prevProps: GridProps): void {
-    if (this.props.resetGrid && !prevProps.resetGrid) {
+    if (this.props.resetGrid) {
       this.setState({ cardStackData: this.generateGrid(this.props.images) });
     }
   }
