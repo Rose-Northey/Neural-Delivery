@@ -6,28 +6,43 @@ interface NewCardProps {
   id: number;
 }
 
-export default class Card extends Component<NewCardProps> {
-  image: string;
-  id: number;
+type CardState = {
   isMatched: boolean;
   isSelected: boolean;
+};
+
+export default class Card extends Component<NewCardProps, CardState> {
+  image: string;
+  id: number;
 
   constructor(props: NewCardProps) {
     super(props);
     this.image = props.image;
     this.id = props.id;
-    this.isMatched = false;
-    this.isSelected = true;
+    this.state = {
+      isMatched: false,
+      isSelected: false,
+    };
   }
+
+  handleCardClick = () => {
+    this.setState({ isSelected: true });
+  };
 
   render() {
     return (
       <>
-        {this.isSelected || this.isMatched ? (
-          <img key={this.id} src={this.image} className={this.isMatched ? undefined : style.isSelected} />
-        ) : (
-          <img className={style.isUnknown} src="/images/unknown.jpg" />
-        )}
+        <div onClick={this.handleCardClick}>
+          {this.state.isSelected || this.state.isMatched ? (
+            <img
+              key={this.id}
+              src={this.image}
+              className={this.state.isMatched ? undefined : style.isSelected}
+            />
+          ) : (
+            <img className={style.isUnknown} src="/images/unknown.jpg" />
+          )}
+        </div>
       </>
     );
   }
