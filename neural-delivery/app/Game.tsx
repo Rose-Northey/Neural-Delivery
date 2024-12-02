@@ -8,9 +8,9 @@ import Card from "./Card";
 type GameProps = {};
 
 export type CardData = {
+  id: number;
   image: string;
   randomization: number;
-  id: number;
   isMatched: boolean;
   isSelected: boolean;
 };
@@ -37,7 +37,7 @@ export default class Game extends Component<GameProps, GameState> {
       cards: this.generateCards(this.images),
     };
     this.handleResetGameClick = this.handleResetGameClick.bind(this);
-    this.handleCardClick = this.handleCardClick.bind(this);
+    this.handleUnknownCardClick = this.handleUnknownCardClick.bind(this);
   }
 
   handleResetGameClick = () => {
@@ -65,23 +65,17 @@ export default class Game extends Component<GameProps, GameState> {
     });
     return shuffleCards(newStack);
   };
-  componentDidUpdate(
-    prevProps: Readonly<GameProps>,
-    prevState: Readonly<GameState>,
-    snapshot?: any
-  ): void {}
 
-  handleCardClick = (cardId: number) => {
+  handleUnknownCardClick = (cardId: number) => {
     this.setState((previousState) => {
-      const cardsAfterClick = previousState.cards.map((card) => {
+      const cardsAfterCardClick = previousState.cards.map((card) => {
         if (card.id === cardId) {
           return { ...card, isSelected: true };
         }
         return card;
       });
-      return { ...previousState, cards: cardsAfterClick };
+      return { ...previousState, cards: cardsAfterCardClick };
     });
-    console.log(this.state);
   };
 
   render() {
@@ -92,7 +86,7 @@ export default class Game extends Component<GameProps, GameState> {
             return (
               <Card
                 key={cardData.id}
-                onCardClick={this.handleCardClick}
+                onUnknownCardClick={this.handleUnknownCardClick}
                 id={cardData.id}
                 image={cardData.image}
                 isSelected={cardData.isSelected}
