@@ -4,14 +4,12 @@ import { Component } from "react";
 interface NewCardProps {
   image: string;
   id: number;
+  onCardClick: (cardId: number) => void;
+  isSelected: boolean;
+  isMatched: boolean;
 }
 
-type CardState = {
-  isMatched: boolean;
-  isSelected: boolean;
-};
-
-export default class Card extends Component<NewCardProps, CardState> {
+export default class Card extends Component<NewCardProps> {
   image: string;
   id: number;
 
@@ -25,10 +23,6 @@ export default class Card extends Component<NewCardProps, CardState> {
     };
   }
 
-  handleCardClick = () => {
-    this.setState({ isSelected: true });
-  };
-
   resetCard = () => {
     this.setState({ isSelected: false, isMatched: false });
   };
@@ -36,12 +30,12 @@ export default class Card extends Component<NewCardProps, CardState> {
   render() {
     return (
       <>
-        <div onClick={this.handleCardClick}>
-          {this.state.isSelected || this.state.isMatched ? (
+        <div onClick={() => this.props.onCardClick(this.id)}>
+          {this.props.isSelected || this.props.isMatched ? (
             <img
               key={this.id}
               src={this.image}
-              className={this.state.isMatched ? undefined : style.isSelected}
+              className={this.props.isMatched ? undefined : style.isSelected}
             />
           ) : (
             <img className={style.isUnknown} src="/images/unknown.jpg" />

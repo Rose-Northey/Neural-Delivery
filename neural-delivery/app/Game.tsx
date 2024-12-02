@@ -37,6 +37,7 @@ export default class Game extends Component<GameProps, GameState> {
       cards: this.generateCards(this.images),
     };
     this.handleResetGameClick = this.handleResetGameClick.bind(this);
+    this.handleCardClick = this.handleCardClick.bind(this);
   }
 
   handleResetGameClick = () => {
@@ -64,13 +65,23 @@ export default class Game extends Component<GameProps, GameState> {
     });
     return shuffleCards(newStack);
   };
+  componentDidUpdate(
+    prevProps: Readonly<GameProps>,
+    prevState: Readonly<GameState>,
+    snapshot?: any
+  ): void {}
 
-  //change function of this to be about changing the state of the cards?
-  // state should ideally flow down and only talk up to parents through events
-  // if you find you're trying to send other things up, try removing the middleman? handle in parent
-
-  handleCardClick = () => {
-    this.setState({ cards: this.generateCards(this.images) });
+  handleCardClick = (cardId: number) => {
+    this.setState((previousState) => {
+      const cardsAfterClick = previousState.cards.map((card) => {
+        if (card.id === cardId) {
+          return { ...card, isSelected: true };
+        }
+        return card;
+      });
+      return { ...previousState, cards: cardsAfterClick };
+    });
+    console.log(this.state);
   };
 
   render() {
@@ -79,7 +90,14 @@ export default class Game extends Component<GameProps, GameState> {
         <div className={styles.grid}>
           {this.state.cards.map((cardData) => {
             return (
-              <Card key={cardData.id} id={cardData.id} image={cardData.image} />
+              <Card
+                key={cardData.id}
+                onCardClick={this.handleCardClick}
+                id={cardData.id}
+                image={cardData.image}
+                isSelected={cardData.isSelected}
+                isMatched={cardData.isMatched}
+              />
             );
           })}
         </div>
