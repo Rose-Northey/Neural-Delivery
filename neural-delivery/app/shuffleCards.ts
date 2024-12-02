@@ -1,4 +1,4 @@
-import { CardData } from "./Grid";
+import { CardData } from "./Game";
 
 export default function shuffleCards(
   cards: CardData[],
