@@ -38,7 +38,10 @@ export default class Game extends Component<GameProps, GameState> {
     };
     this.handleResetGameClick = this.handleResetGameClick.bind(this);
   }
-  handleResetGameClick = () => {};
+
+  handleResetGameClick = () => {
+    this.setState({ cards: this.generateCards(this.images) });
+  };
 
   generateCards = (cardImages: string[]): CardData[] => {
     const newStack: CardData[] = [];
