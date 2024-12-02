@@ -29,6 +29,10 @@ export default class Card extends Component<NewCardProps, CardState> {
     this.setState({ isSelected: true });
   };
 
+  resetCard = () => {
+    this.setState({ isSelected: false, isMatched: false });
+  };
+
   render() {
     return (
       <>

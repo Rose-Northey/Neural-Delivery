@@ -26,6 +26,11 @@ export default class Game extends Component<GameProps, GameState> {
       })
     );
   };
+  //change function of this to be about changing the state of the cards?
+  // state should ideally flow down and only talk up to parents through events
+  // if you find you're trying to send other things up, try removing the middleman? handle in parent
+
+  handleCardClick = () => {};
 
   render() {
     const images = [
