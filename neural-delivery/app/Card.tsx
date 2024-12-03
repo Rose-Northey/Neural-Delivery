@@ -4,19 +4,14 @@ import { Component } from "react";
 interface NewCardProps {
   image: string;
   id: number;
-  onUnknownCardClick: (cardId: number) => void;
+  onUnknownCardClick: (cardId: number, image: string) => void;
   isSelected: boolean;
   isMatched: boolean;
 }
 
 export default class Card extends Component<NewCardProps> {
-  image: string;
-  id: number;
-
   constructor(props: NewCardProps) {
     super(props);
-    this.image = props.image;
-    this.id = props.id;
     this.state = {
       isMatched: false,
       isSelected: false,
@@ -28,13 +23,15 @@ export default class Card extends Component<NewCardProps> {
       <>
         {this.props.isSelected || this.props.isMatched ? (
           <img
-            key={this.id}
-            src={this.image}
+            key={this.props.id}
+            src={this.props.image}
             className={this.props.isMatched ? undefined : style.isSelected}
           />
         ) : (
           <img
-            onClick={() => this.props.onUnknownCardClick(this.id)}
+            onClick={() =>
+              this.props.onUnknownCardClick(this.props.id, this.props.image)
+            }
             className={style.isUnknown}
             src="/images/unknown.jpg"
           />
@@ -43,9 +40,6 @@ export default class Card extends Component<NewCardProps> {
     );
   }
 }
-
-// if unknown, the unknown image is displayed
-// if not unknown, check if its
 
 const style = {
   isSelected: css({

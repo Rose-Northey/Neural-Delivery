@@ -16,7 +16,7 @@ export type CardData = {
 };
 
 type GameState = {
-  numberOfMoves: number;
+  moveCount: number;
   cards: CardData[];
 };
 
@@ -33,7 +33,7 @@ export default class Game extends Component<GameProps, GameState> {
       "/images/duck.jpg",
     ];
     this.state = {
-      numberOfMoves: 0,
+      moveCount: 0,
       cards: this.generateCards(this.images),
     };
     this.handleResetGameClick = this.handleResetGameClick.bind(this);
@@ -41,7 +41,22 @@ export default class Game extends Component<GameProps, GameState> {
   }
 
   handleResetGameClick = () => {
-    this.setState({ cards: this.generateCards(this.images) });
+    this.setState({ moveCount: 0, cards: this.generateCards(this.images) });
+  };
+
+  unselectAllSelectedCards = () => {
+    this.setState((prevState) => {
+      const cardsAfterNoPairFound = prevState.cards.map((card) => {
+        if (card.isSelected === true) {
+          return { ...card, isSelected: false };
+        }
+        return card;
+      });
+      return {
+        moveCount: prevState.moveCount + 1,
+        cards: cardsAfterNoPairFound,
+      };
+    });
   };
 
   generateCards = (cardImages: string[]): CardData[] => {
@@ -66,15 +81,54 @@ export default class Game extends Component<GameProps, GameState> {
     return shuffleCards(newStack);
   };
 
-  handleUnknownCardClick = (cardId: number) => {
-    this.setState((previousState) => {
-      const cardsAfterCardClick = previousState.cards.map((card) => {
+  handleUnknownCardClick = (cardId: number, image: string) => {
+    const selectedCards = this.state.cards.filter(
+      (card) => card.isSelected === true
+    );
+    this.revealCard(cardId);
+    if (selectedCards.length === 1) {
+      const firstCardImage = selectedCards[0].image;
+      this.handleSecondUnknownCardClick(firstCardImage, image);
+    }
+  };
+
+  handleSecondUnknownCardClick = (
+    firstCardImage: string,
+    secondCardImage: string
+  ) => {
+    if (firstCardImage === secondCardImage) {
+      // wait one second
+      setTimeout(
+        () =>
+          this.setState((prevState) => {
+            const cardsAfterPairFound = prevState.cards.map((card) => {
+              if (card.image === firstCardImage) {
+                return { ...card, isMatched: true, isSelected: false };
+              }
+              return card;
+            });
+            return {
+              moveCount: prevState.moveCount + 1,
+              cards: cardsAfterPairFound,
+            };
+          }),
+        1000
+      );
+    } else {
+      this.unselectAllSelectedCards();
+    }
+  };
+
+  revealCard = (cardId: number) => {
+    this.setState((prevState) => {
+      const cardsAfterCardClick = prevState.cards.map((card) => {
         if (card.id === cardId) {
           return { ...card, isSelected: true };
         }
         return card;
       });
-      return { ...previousState, cards: cardsAfterCardClick };
+      console.log("mid reveal card hit");
+      return { ...prevState, cards: cardsAfterCardClick };
     });
   };
 
@@ -95,7 +149,10 @@ export default class Game extends Component<GameProps, GameState> {
             );
           })}
         </div>
-        <Controls onResetGameClick={this.handleResetGameClick} />
+        <Controls
+          onResetGameClick={this.handleResetGameClick}
+          moveCount={this.state.moveCount}
+        />
       </div>
     );
   }
@@ -121,5 +178,3 @@ const styles = {
     },
   }),
 };
-
-//add newGameClick function

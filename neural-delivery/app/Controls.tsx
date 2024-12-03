@@ -3,18 +3,18 @@ import { Component } from "react";
 
 type ControlsProps = {
   onResetGameClick: () => void;
+  moveCount: number;
 };
 export default class Controls extends Component<ControlsProps> {
-  moveCount: number;
   constructor(props: ControlsProps) {
     super(props);
-    this.moveCount = 3;
   }
   render() {
     return (
       <div className={style.controlsContainer}>
         <div className={style.moveCountContainer}>
-          MoveCount:<div className={style.countContainer}>{this.moveCount}</div>
+          MoveCount:
+          <div className={style.countContainer}>{this.props.moveCount}</div>
         </div>
         <button onClick={this.props.onResetGameClick}>New Game</button>
       </div>
