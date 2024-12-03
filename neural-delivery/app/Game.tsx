@@ -75,7 +75,6 @@ export default class Game extends Component<GameProps, GameState> {
         )[0];
         this.markCurrentCardAsSelected(currentCardId);
         if (previousCard) {
-            this.increaseMoveCount();
             setTimeout(() => {
                 if (previousCard.image === currentCardImage) {
                     this.markPreviousAndCurrentCardsAsMatched(
@@ -85,6 +84,8 @@ export default class Game extends Component<GameProps, GameState> {
                     this.unselectAllCards();
                 }
             }, 1000);
+        } else {
+            this.increaseMoveCount();
         }
     };
 
@@ -99,6 +100,7 @@ export default class Game extends Component<GameProps, GameState> {
             return { ...prevState, cards: updatedCards };
         });
     };
+
     unselectAllCards = () => {
         this.setState((prevState) => {
             const updatedCards = prevState.cards.map((card) => {
@@ -108,11 +110,12 @@ export default class Game extends Component<GameProps, GameState> {
                 return card;
             });
             return {
-                moveCount: prevState.moveCount + 1,
+                ...prevState,
                 cards: updatedCards,
             };
         });
     };
+
     markPreviousAndCurrentCardsAsMatched = (matchedImage: string) => {
         this.setState((prevState) => {
             const updatedCards = prevState.cards.map((card) => {
@@ -122,7 +125,7 @@ export default class Game extends Component<GameProps, GameState> {
                 return card;
             });
             return {
-                moveCount: prevState.moveCount + 1,
+                ...prevState,
                 cards: updatedCards,
             };
         });
