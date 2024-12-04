@@ -10,7 +10,6 @@ type GameProps = {};
 export type CardData = {
     id: number;
     image: string;
-    randomization: number;
     isMatched: boolean;
     isSelected: boolean;
 };
@@ -50,19 +49,20 @@ export default class Game extends Component<GameProps, GameState> {
             const cardData1 = {
                 image: image,
                 id: newStack.length,
-                randomization: Math.random(),
                 isMatched: false,
                 isSelected: false,
             };
             const cardData2 = {
                 image: image,
                 id: newStack.length + 1,
-                randomization: Math.random(),
                 isMatched: false,
                 isSelected: false,
             };
             newStack.push(cardData1, cardData2);
         });
+        //this function creates cardDataForShuffling
+        // and outputs cardData afterShuffling
+
         return shuffleCards(newStack);
     };
 
@@ -70,22 +70,26 @@ export default class Game extends Component<GameProps, GameState> {
         currentCardId: number,
         currentCardImage: string
     ) => {
-        const previousCard = this.state.cards.filter(
+        const allSelectedCards = this.state.cards.filter(
             (card) => card.isSelected === true
-        )[0];
-        this.markCurrentCardAsSelected(currentCardId);
-        if (previousCard) {
-            setTimeout(() => {
-                if (previousCard.image === currentCardImage) {
-                    this.markPreviousAndCurrentCardsAsMatched(
-                        previousCard.image
-                    );
-                } else {
-                    this.unselectAllCards();
-                }
-            }, 1000);
-        } else {
-            this.increaseMoveCount();
+        );
+
+        if (allSelectedCards.length < 2) {
+            const previousCard = allSelectedCards[0];
+            this.markCurrentCardAsSelected(currentCardId);
+            if (previousCard) {
+                setTimeout(() => {
+                    if (previousCard.image === currentCardImage) {
+                        this.markPreviousAndCurrentCardsAsMatched(
+                            previousCard.image
+                        );
+                    } else {
+                        this.unselectAllCards();
+                    }
+                }, 1000);
+            } else {
+                this.increaseMoveCount();
+            }
         }
     };
 
