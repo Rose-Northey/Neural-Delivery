@@ -77,6 +77,9 @@ export default class Game extends Component<GameProps, GameState> {
             this.markCurrentCardAsSelected(currentCardId);
             if (previousCard) {
                 setTimeout(() => {
+                    console.log(
+                        `previous card image: ${previousCard.image} and current card image: ${currentCardImage}`
+                    );
                     if (previousCard.image === currentCardImage) {
                         this.markPreviousAndCurrentCardsAsMatched(
                             previousCard.image

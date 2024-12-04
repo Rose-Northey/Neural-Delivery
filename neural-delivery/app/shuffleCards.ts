@@ -1,23 +1,13 @@
 import { CardData } from "./Game";
 
-// this function takes all of the cards and sorts them according to a
-// randomization number it internally creates
-
-// data structure for sorting looks like:
-
 type CardWithRandomization = {
     randomization: number;
     card: CardData;
 };
-// map though all cards and create an associated randomization number
-// perform swap functions on both the cards and the randomization numbers
-
-//create a function which takes in any array of values and shuffles them,
-// returning only an array of the values
-
-// create a function which
 
 export default function shuffleCards(cards: CardData[]): CardData[] {
+    console.log(`here are the cards:`);
+    console.log(cards);
     const cardsWithRandomization = cards.map((card) => {
         const randomization = Math.random();
         return { card, randomization };
@@ -28,6 +18,8 @@ export default function shuffleCards(cards: CardData[]): CardData[] {
             return cardWithRandomization.card;
         }
     );
+    console.log(`here are the shuffled cards:`);
+    console.log(shuffledCards);
     return shuffledCards;
 }
 

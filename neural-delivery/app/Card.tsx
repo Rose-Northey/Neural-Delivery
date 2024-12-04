@@ -19,29 +19,32 @@ export default class Card extends Component<NewCardProps> {
     }
 
     render() {
-        const { id, image, isMatched, isSelected } = this.props;
         return (
             <>
-                {isMatched ? (
-                    <img key={id} src={image} />
+                {this.props.isMatched ? (
+                    <img key={this.props.id} src={this.props.image} />
                 ) : (
                     <div className={style.card}>
                         <div
                             className={cx(
                                 style.cardInner,
-                                isSelected ? style.isFlipped : ""
+                                this.props.isSelected ? style.isFlipped : ""
                             )}
                         >
                             <img
                                 onClick={() =>
-                                    this.props.onUnknownCardClick(id, image)
+                                    this.props.onUnknownCardClick(
+                                        this.props.id,
+                                        this.props.image
+                                    )
                                 }
                                 src="/images/unknown.jpg"
+                                // src={image}
                                 className={style.isUnknown}
                             />
                             <img
-                                key={id}
-                                src={image}
+                                key={this.props.id}
+                                src={this.props.image}
                                 className={style.isSelected}
                             />
                         </div>
