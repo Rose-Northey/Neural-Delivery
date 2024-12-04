@@ -19,31 +19,29 @@ export default class Card extends Component<NewCardProps> {
     }
 
     render() {
+        const { id, image, isMatched, isSelected } = this.props;
         return (
             <>
-                {this.props.isMatched ? (
-                    <img key={this.props.id} src={this.props.image} />
+                {isMatched ? (
+                    <img key={id} src={image} />
                 ) : (
                     <div className={style.card}>
                         <div
                             className={cx(
                                 style.cardInner,
-                                this.props.isSelected ? style.isFlipped : ""
+                                isSelected ? style.isFlipped : ""
                             )}
                         >
                             <img
                                 onClick={() =>
-                                    this.props.onUnknownCardClick(
-                                        this.props.id,
-                                        this.props.image
-                                    )
+                                    this.props.onUnknownCardClick(id, image)
                                 }
                                 src="/images/unknown.jpg"
                                 className={style.isUnknown}
                             />
                             <img
-                                key={this.props.id}
-                                src={this.props.image}
+                                key={id}
+                                src={image}
                                 className={style.isSelected}
                             />
                         </div>
@@ -88,22 +86,3 @@ const style = {
         transform: "rotateY(180deg)",
     }),
 };
-
-// cards have an imageSource and this also acts as a unique ID
-{
-    /* {this.props.isSelected || this.props.isMatched ? (
-          <img
-            key={this.props.id}
-            src={this.props.image}
-            className={this.props.isMatched ? undefined : style.isSelected}
-          />
-        ) : (
-          <img
-            onClick={() =>
-              this.props.onUnknownCardClick(this.props.id, this.props.image)
-            }
-            className={style.isUnknown}
-            src="/images/unknown.jpg"
-          />
-        )} */
-}
