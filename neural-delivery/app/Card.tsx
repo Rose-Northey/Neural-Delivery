@@ -77,6 +77,7 @@ const style = {
     }),
 
     isUnknown: css({
+        boxShadow: "0 0 0 2px #0066b2",
         zIndex: "2",
         "&:hover": { boxShadow: "0 0 0 2px #7d90a1" },
         backfaceVisibility: "hidden",
@@ -84,6 +85,7 @@ const style = {
     isSelected: css({
         opacity: "75%",
         boxShadow: "0 0 0 2px #FEBE10",
+        transform: "rotateY(180deg)",
     }),
 };
 
