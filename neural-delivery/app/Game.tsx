@@ -60,8 +60,6 @@ export default class Game extends Component<GameProps, GameState> {
             };
             newStack.push(cardData1, cardData2);
         });
-        //this function creates cardDataForShuffling
-        // and outputs cardData afterShuffling
 
         return shuffleCards(newStack);
     };
