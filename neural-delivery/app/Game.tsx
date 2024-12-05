@@ -8,10 +8,10 @@ import Card from "./Card";
 type GameProps = {};
 
 export type CardData = {
-    id: number;
     image: string;
     isMatched: boolean;
     isSelected: boolean;
+    id: number;
 };
 
 type GameState = {
@@ -26,17 +26,17 @@ export default class Game extends Component<GameProps, GameState> {
         this.images = [
             "/images/blackCat.jpg",
             "/images/horse.jpg",
-            "/images/box.jpg",
-            "/images/uke.jpg",
-            "/images/plant.jpg",
-            "/images/duck.jpg",
+            // "/images/box.jpg",
+            // "/images/uke.jpg",
+            // "/images/plant.jpg",
+            // "/images/duck.jpg",
         ];
         this.state = {
             moveCount: 0,
             cards: this.generateCards(this.images),
         };
         this.handleResetGameClick = this.handleResetGameClick.bind(this);
-        this.handleUnknownCardClick = this.handleUnknownCardClick.bind(this);
+        // this.handleUnknownCardClick = this.handleUnknownCardClick.bind(this);
     }
 
     handleResetGameClick = () => {
@@ -48,15 +48,15 @@ export default class Game extends Component<GameProps, GameState> {
         cardImages.forEach((image) => {
             const cardData1 = {
                 image: image,
-                id: newStack.length,
                 isMatched: false,
                 isSelected: false,
+                id: newStack.length,
             };
             const cardData2 = {
                 image: image,
-                id: newStack.length + 1,
                 isMatched: false,
                 isSelected: false,
+                id: newStack.length + 1,
             };
             newStack.push(cardData1, cardData2);
         });
@@ -77,9 +77,9 @@ export default class Game extends Component<GameProps, GameState> {
             this.markCurrentCardAsSelected(currentCardId);
             if (previousCard) {
                 setTimeout(() => {
-                    console.log(
-                        `previous card image: ${previousCard.image} and current card image: ${currentCardImage}`
-                    );
+                    // console.log(
+                    //     `previous card image: ${previousCard.image} and current card image: ${currentCardImage}`
+                    // );
                     if (previousCard.image === currentCardImage) {
                         this.markPreviousAndCurrentCardsAsMatched(
                             previousCard.image

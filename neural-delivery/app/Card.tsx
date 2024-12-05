@@ -22,7 +22,7 @@ export default class Card extends Component<NewCardProps> {
         return (
             <>
                 {this.props.isMatched ? (
-                    <img key={this.props.id} src={this.props.image} />
+                    <img src={this.props.image} />
                 ) : (
                     <div className={style.card}>
                         <div
@@ -39,7 +39,6 @@ export default class Card extends Component<NewCardProps> {
                                     )
                                 }
                                 src="/images/unknown.jpg"
-                                // src={image}
                                 className={style.isUnknown}
                             />
                             <img

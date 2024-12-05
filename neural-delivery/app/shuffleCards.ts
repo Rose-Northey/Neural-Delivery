@@ -6,20 +6,17 @@ type CardWithRandomization = {
 };
 
 export default function shuffleCards(cards: CardData[]): CardData[] {
-    console.log(`here are the cards:`);
-    console.log(cards);
     const cardsWithRandomization = cards.map((card) => {
         const randomization = Math.random();
         return { card, randomization };
     });
-    quickSort(cardsWithRandomization);
-    const shuffledCards = cardsWithRandomization.map(
+    const shuffledCardsWithRandomization = quickSort(cardsWithRandomization);
+    console.log(shuffledCardsWithRandomization);
+    const shuffledCards = shuffledCardsWithRandomization.map(
         (cardWithRandomization) => {
             return cardWithRandomization.card;
         }
     );
-    console.log(`here are the shuffled cards:`);
-    console.log(shuffledCards);
     return shuffledCards;
 }
 
