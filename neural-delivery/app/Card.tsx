@@ -22,15 +22,15 @@ export default class Card extends Component<NewCardProps> {
         return (
             <>
                 {this.props.isMatched ? (
-                    <img src={this.props.image} />
+                    <img
+                        src={this.props.image}
+                        className={
+                            this.props.isMatched ? undefined : style.isSelected
+                        }
+                    />
                 ) : (
                     <div className={style.card}>
-                        <div
-                            className={cx(
-                                style.cardInner,
-                                this.props.isSelected ? style.isFlipped : ""
-                            )}
-                        >
+                        <div className={style.cardInner}>
                             <img
                                 onClick={() =>
                                     this.props.onUnknownCardClick(
@@ -38,18 +38,54 @@ export default class Card extends Component<NewCardProps> {
                                         this.props.image
                                     )
                                 }
-                                src="/images/unknown.jpg"
                                 className={style.isUnknown}
+                                src="/images/unknown.jpg"
+                                // src={this.props.image}
                             />
                             <img
-                                src={this.props.image}
                                 className={style.isSelected}
+                                // src="/images/unknown.jpg"
+                                src={this.props.image}
                             />
                         </div>
                     </div>
                 )}
             </>
         );
+
+        // return (
+        //     <>
+        //         {this.props.isMatched ? (
+        //             <img
+        //                 src={this.props.image}
+        //                 className={
+        //                     this.props.isMatched ? undefined : style.isSelected
+        //                 }
+        //             />
+        //         ) : (
+        //             <div className={style.card}>
+        //                 <div className={style.cardInner}>
+        //                     <img
+        //                         onClick={() =>
+        //                             this.props.onUnknownCardClick(
+        //                                 this.props.id,
+        //                                 this.props.image
+        //                             )
+        //                         }
+        //                         className={style.isUnknown}
+        //                         src="/images/unknown.jpg"
+        //                         // src={this.props.image}
+        //                     />
+        //                     <img
+        //                         className={style.isSelected}
+        //                         // src="/images/unknown.jpg"
+        //                         src={this.props.image}
+        //                     />
+        //                 </div>
+        //             </div>
+        //         )}
+        //     </>
+        // );
     }
 }
 
@@ -75,15 +111,20 @@ const style = {
         },
     }),
 
-    isUnknown: css({
+    isUnknownflip: css({
         boxShadow: "0 0 0 2px #0066b2",
         zIndex: "2",
         "&:hover": { boxShadow: "0 0 0 2px #7d90a1" },
         backfaceVisibility: "hidden",
     }),
+
     isSelected: css({
         opacity: "75%",
         boxShadow: "0 0 0 2px #FEBE10",
-        transform: "rotateY(180deg)",
+    }),
+    isUnknown: css({
+        "&:hover": { boxShadow: "0 0 0 2px #7d90a1" },
     }),
 };
+
+// cards have an imageSource and this also acts as a unique ID
