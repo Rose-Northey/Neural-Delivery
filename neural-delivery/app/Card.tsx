@@ -60,19 +60,19 @@ const style = {
     }),
     card: css({
         width: "150px",
-        height: "150px",
+        aspectRatio: "1",
         perspective: "1000px",
     }),
     cardInner: css({
         width: "100%",
-        height: "100%",
+        aspectRatio: "1",
         position: "relative",
         transition: "transform 0.8s",
         transformStyle: "preserve-3d",
         "&>img": {
             position: "absolute",
             width: "100%",
-            height: "100%",
+            aspectRatio: "1",
         },
     }),
 

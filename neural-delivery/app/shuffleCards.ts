@@ -11,7 +11,6 @@ export default function shuffleCards(cards: CardData[]): CardData[] {
         return { card, randomization };
     });
     const shuffledCardsWithRandomization = quickSort(cardsWithRandomization);
-    console.log(shuffledCardsWithRandomization);
     const shuffledCards = shuffledCardsWithRandomization.map(
         (cardWithRandomization) => {
             return cardWithRandomization.card;

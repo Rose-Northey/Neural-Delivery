@@ -17,10 +17,12 @@ export type CardData = {
 type GameState = {
     moveCount: number;
     cards: CardData[];
+    winConditionMet: boolean;
 };
 
 export default class Game extends Component<GameProps, GameState> {
     images: string[];
+    cards: CardData[];
     constructor(props: GameProps) {
         super(props);
         this.images = [
@@ -31,16 +33,24 @@ export default class Game extends Component<GameProps, GameState> {
             // "/images/plant.jpg",
             // "/images/duck.jpg",
         ];
+        this.cards = this.generateCards(this.images);
+        console.log(this.cards);
         this.state = {
             moveCount: 0,
-            cards: this.generateCards(this.images),
+            cards: this.cards,
+            winConditionMet: false,
         };
         this.handleResetGameClick = this.handleResetGameClick.bind(this);
-        // this.handleUnknownCardClick = this.handleUnknownCardClick.bind(this);
     }
 
     handleResetGameClick = () => {
-        this.setState({ moveCount: 0, cards: this.generateCards(this.images) });
+        const newCards = this.generateCards(this.images);
+        console.log(newCards);
+        this.setState({
+            winConditionMet: false,
+            moveCount: 0,
+            cards: newCards,
+        });
     };
 
     generateCards = (cardImages: string[]): CardData[] => {
@@ -77,9 +87,6 @@ export default class Game extends Component<GameProps, GameState> {
             this.markCurrentCardAsSelected(currentCardId);
             if (previousCard) {
                 setTimeout(() => {
-                    // console.log(
-                    //     `previous card image: ${previousCard.image} and current card image: ${currentCardImage}`
-                    // );
                     if (previousCard.image === currentCardImage) {
                         this.markPreviousAndCurrentCardsAsMatched(
                             previousCard.image
@@ -92,6 +99,7 @@ export default class Game extends Component<GameProps, GameState> {
                 this.increaseMoveCount();
             }
         }
+        this.checkIfWinConditionMet();
     };
 
     markCurrentCardAsSelected = (cardId: number) => {
@@ -104,6 +112,20 @@ export default class Game extends Component<GameProps, GameState> {
             });
             return { ...prevState, cards: updatedCards };
         });
+    };
+
+    checkIfWinConditionMet = () => {
+        const winConditionMet =
+            this.state.cards.filter((card) => {
+                return !card.isMatched;
+            }).length === 0;
+
+        if (winConditionMet) {
+            this.setState((prevState) => ({
+                ...prevState,
+                winConditionMet: true,
+            }));
+        }
     };
 
     unselectAllCards = () => {
@@ -144,31 +166,45 @@ export default class Game extends Component<GameProps, GameState> {
 
     render() {
         return (
-            <div className={styles.gridAndControlsContainer}>
-                <div className={styles.grid}>
-                    {this.state.cards.map((cardData) => {
-                        return (
-                            <Card
-                                key={cardData.id}
-                                onUnknownCardClick={this.handleUnknownCardClick}
-                                id={cardData.id}
-                                image={cardData.image}
-                                isSelected={cardData.isSelected}
-                                isMatched={cardData.isMatched}
-                            />
-                        );
-                    })}
+            <>
+                <div
+                    className={
+                        this.state.winConditionMet ? "" : styles.notWonYet
+                    }
+                >
+                    YOU WIN!
                 </div>
-                <Controls
-                    onResetGameClick={this.handleResetGameClick}
-                    moveCount={this.state.moveCount}
-                />
-            </div>
+                <div className={styles.gridAndControlsContainer}>
+                    <div className={styles.grid}>
+                        {this.state.cards.map((cardData) => {
+                            return (
+                                <Card
+                                    key={cardData.id}
+                                    onUnknownCardClick={
+                                        this.handleUnknownCardClick
+                                    }
+                                    id={cardData.id}
+                                    image={cardData.image}
+                                    isSelected={cardData.isSelected}
+                                    isMatched={cardData.isMatched}
+                                />
+                            );
+                        })}
+                    </div>
+                    <Controls
+                        onResetGameClick={this.handleResetGameClick}
+                        moveCount={this.state.moveCount}
+                    />
+                </div>
+            </>
         );
     }
 }
 
 const styles = {
+    notWonYet: css({
+        display: "none",
+    }),
     gridAndControlsContainer: css({
         minHeight: "90%",
         backgroundColor: "#0066b2",
@@ -181,9 +217,10 @@ const styles = {
     grid: css({
         display: "flex",
         flexWrap: "wrap",
-        maxWidth: "40rem",
+        maxWidth: "50%",
         gap: "0.5rem",
         "& img": {
+            // width: "100%",
             width: "150px",
         },
     }),
