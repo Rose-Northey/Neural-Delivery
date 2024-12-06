@@ -42,7 +42,6 @@ export default class Card extends Component<NewCardProps> {
                                 className={style.isUnknown}
                             />
                             <img
-                                key={this.props.id}
                                 src={this.props.image}
                                 className={style.isSelected}
                             />
