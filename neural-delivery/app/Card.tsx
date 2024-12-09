@@ -52,40 +52,6 @@ export default class Card extends Component<NewCardProps> {
                 )}
             </>
         );
-
-        // return (
-        //     <>
-        //         {this.props.isMatched ? (
-        //             <img
-        //                 src={this.props.image}
-        //                 className={
-        //                     this.props.isMatched ? undefined : style.isSelected
-        //                 }
-        //             />
-        //         ) : (
-        //             <div className={style.card}>
-        //                 <div className={style.cardInner}>
-        //                     <img
-        //                         onClick={() =>
-        //                             this.props.onUnknownCardClick(
-        //                                 this.props.id,
-        //                                 this.props.image
-        //                             )
-        //                         }
-        //                         className={style.isUnknown}
-        //                         src="/images/unknown.jpg"
-        //                         // src={this.props.image}
-        //                     />
-        //                     <img
-        //                         className={style.isSelected}
-        //                         // src="/images/unknown.jpg"
-        //                         src={this.props.image}
-        //                     />
-        //                 </div>
-        //             </div>
-        //         )}
-        //     </>
-        // );
     }
 }
 
