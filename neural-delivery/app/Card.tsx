@@ -12,44 +12,42 @@ interface NewCardProps {
 export default class Card extends Component<NewCardProps> {
     constructor(props: NewCardProps) {
         super(props);
-        this.state = {
-            isMatched: false,
-            isSelected: false,
-        };
     }
 
     render() {
         return (
             <>
-                {this.props.isMatched ? (
-                    <img
-                        src={this.props.image}
-                        className={
-                            this.props.isMatched ? undefined : style.isSelected
-                        }
-                    />
-                ) : (
-                    <div className={style.card}>
-                        <div className={style.cardInner}>
-                            <img
-                                onClick={() =>
-                                    this.props.onUnknownCardClick(
-                                        this.props.id,
-                                        this.props.image
-                                    )
-                                }
-                                className={style.isUnknown}
-                                src="/images/unknown.jpg"
-                                // src={this.props.image}
-                            />
-                            <img
-                                className={style.isSelected}
-                                // src="/images/unknown.jpg"
-                                src={this.props.image}
-                            />
-                        </div>
+                <div className={style.card}>
+                    <div
+                        className={cx(
+                            style.cardInner,
+                            this.props.isMatched || this.props.isSelected
+                                ? style.isFlipped
+                                : ""
+                        )}
+                    >
+                        <img
+                            onClick={() =>
+                                this.props.isSelected || this.props.isMatched
+                                    ? null
+                                    : this.props.onUnknownCardClick(
+                                          this.props.id,
+                                          this.props.image
+                                      )
+                            }
+                            className={style.isUnknownFlip}
+                            src="/images/unknown.jpg"
+                        />
+                        <img
+                            className={
+                                this.props.isSelected
+                                    ? cx(style.isSelected, style.isFlipped)
+                                    : style.isFlipped
+                            }
+                            src={this.props.image}
+                        />
                     </div>
-                )}
+                </div>
             </>
         );
     }
@@ -77,7 +75,7 @@ const style = {
         },
     }),
 
-    isUnknownflip: css({
+    isUnknownFlip: css({
         boxShadow: "0 0 0 2px #0066b2",
         zIndex: "2",
         "&:hover": { boxShadow: "0 0 0 2px #7d90a1" },

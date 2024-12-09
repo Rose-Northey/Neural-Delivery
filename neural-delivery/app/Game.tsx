@@ -27,14 +27,13 @@ export default class Game extends Component<GameProps, GameState> {
         super(props);
         this.images = [
             "/images/blackCat.jpg",
-            "/images/horse.jpg",
-            // "/images/box.jpg",
+            // "/images/horse.jpg",
+            "/images/box.jpg",
             // "/images/uke.jpg",
             // "/images/plant.jpg",
             // "/images/duck.jpg",
         ];
         this.cards = this.generateCards(this.images);
-        console.log(this.cards);
         this.state = {
             moveCount: 0,
             cards: this.cards,
@@ -45,7 +44,6 @@ export default class Game extends Component<GameProps, GameState> {
 
     handleResetGameClick = () => {
         const newCards = this.generateCards(this.images);
-        console.log(newCards);
         this.setState({
             winConditionMet: false,
             moveCount: 0,
@@ -220,7 +218,6 @@ const styles = {
         maxWidth: "50%",
         gap: "0.5rem",
         "& img": {
-            // width: "100%",
             width: "150px",
         },
     }),
