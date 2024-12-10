@@ -27,11 +27,11 @@ export default class Game extends Component<GameProps, GameState> {
         super(props);
         this.images = [
             "/images/blackCat.jpg",
-            // "/images/horse.jpg",
+            "/images/horse.jpg",
             "/images/box.jpg",
-            // "/images/uke.jpg",
-            // "/images/plant.jpg",
-            // "/images/duck.jpg",
+            "/images/uke.jpg",
+            "/images/plant.jpg",
+            "/images/duck.jpg",
         ];
         this.cards = this.generateCards(this.images);
         this.state = {

@@ -17,17 +17,15 @@ export default class Card extends Component<NewCardProps> {
     render() {
         return (
             <>
-                <div className={style.card}>
+                <div className={style.outerContainer.default}>
                     <div
                         className={cx(
-                            style.cardInner,
+                            style.innerContainer.default,
                             this.props.isMatched || this.props.isSelected
-                                ? style.isFlipped
+                                ? style.innerContainer.isFlipped
                                 : ""
                         )}
                     >
-                        <div>{this.props.image}</div>
-
                         <img
                             onClick={() =>
                                 this.props.isSelected || this.props.isMatched
@@ -37,15 +35,18 @@ export default class Card extends Component<NewCardProps> {
                                           this.props.image
                                       )
                             }
-                            className={style.isUnknownFlip}
+                            className={style.frontOfCard.default}
                             src="/images/unknown.jpg"
                         />
 
                         <img
                             className={
                                 this.props.isMatched
-                                    ? style.isFlipped
-                                    : cx(style.isFlipped, style.isSelected)
+                                    ? style.backOfCard.default
+                                    : cx(
+                                          style.backOfCard.default,
+                                          style.backOfCard.isSelected
+                                      )
                             }
                             src={this.props.image}
                         />
@@ -98,39 +99,45 @@ export default class Card extends Component<NewCardProps> {
 // }
 
 const style = {
-    isFlipped: css({
-        transform: "rotateY(180deg)",
-    }),
-    card: css({
-        width: "150px",
-        aspectRatio: "1",
-        perspective: "1000px",
-    }),
-    cardInner: css({
-        width: "100%",
-        aspectRatio: "1",
-        position: "relative",
-        transition: "transform 0.8s",
-        transformStyle: "preserve-3d",
-        "&>img": {
-            position: "absolute",
+    outerContainer: {
+        default: css({
+            width: "150px",
+            aspectRatio: "1",
+            perspective: "1000px",
+        }),
+    },
+    innerContainer: {
+        default: css({
             width: "100%",
             aspectRatio: "1",
-        },
-    }),
-
-    isUnknownFlip: css({
-        boxShadow: "0 0 0 2px #0066b2",
-        zIndex: "2",
-        "&:hover": { boxShadow: "0 0 0 2px #7d90a1" },
-        backfaceVisibility: "hidden",
-    }),
-
-    isSelected: css({
-        opacity: "75%",
-        boxShadow: "0 0 0 2px #FEBE10",
-    }),
-    isUnknown: css({
-        "&:hover": { boxShadow: "0 0 0 2px #7d90a1" },
-    }),
+            position: "relative",
+            transition: "transform 0.8s",
+            transformStyle: "preserve-3d",
+            "&>img": {
+                position: "absolute",
+                width: "100%",
+                aspectRatio: "1",
+            },
+        }),
+        isFlipped: css({
+            transform: "rotateY(180deg)",
+        }),
+    },
+    frontOfCard: {
+        default: css({
+            boxShadow: "0 0 0 2px #0066b2",
+            zIndex: "2",
+            "&:hover": { boxShadow: "0 0 0 2px #7d90a1" },
+            backfaceVisibility: "hidden",
+        }),
+    },
+    backOfCard: {
+        default: css({
+            transform: "rotateY(180deg)",
+        }),
+        isSelected: css({
+            opacity: "75%",
+            boxShadow: "0 0 0 2px #FEBE10",
+        }),
+    },
 };
