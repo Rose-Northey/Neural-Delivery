@@ -26,6 +26,8 @@ export default class Card extends Component<NewCardProps> {
                                 : ""
                         )}
                     >
+                        <div>{this.props.image}</div>
+
                         <img
                             onClick={() =>
                                 this.props.isSelected || this.props.isMatched
@@ -38,11 +40,12 @@ export default class Card extends Component<NewCardProps> {
                             className={style.isUnknownFlip}
                             src="/images/unknown.jpg"
                         />
+
                         <img
                             className={
-                                this.props.isSelected
-                                    ? cx(style.isSelected, style.isFlipped)
-                                    : style.isFlipped
+                                this.props.isMatched
+                                    ? style.isFlipped
+                                    : cx(style.isFlipped, style.isSelected)
                             }
                             src={this.props.image}
                         />
@@ -52,6 +55,47 @@ export default class Card extends Component<NewCardProps> {
         );
     }
 }
+
+// cards have an imageSource and this also acts as a unique ID
+
+//     render() {
+//         return (
+//             <>
+//                 <div className={style.card}>
+//                     <div
+//                         className={cx(
+//                             style.cardInner,
+//                             this.props.isMatched || this.props.isSelected
+//                                 ? style.isFlipped
+//                                 : ""
+//                         )}
+//                     >
+//                         <img
+//                             onClick={() =>
+//                                 this.props.isSelected || this.props.isMatched
+//                                     ? null
+//                                     : this.props.onUnknownCardClick(
+//                                           this.props.id,
+//                                           this.props.image
+//                                       )
+//                             }
+//                             className={style.isUnknownFlip}
+//                             src="/images/unknown.jpg"
+//                         />
+//                         <img
+//                             className={
+//                                 this.props.isSelected
+//                                     ? cx(style.isSelected, style.isFlipped)
+//                                     : style.isFlipped
+//                             }
+//                             src={this.props.image}
+//                         />
+//                     </div>
+//                 </div>
+//             </>
+//         );
+//     }
+// }
 
 const style = {
     isFlipped: css({
@@ -90,5 +134,3 @@ const style = {
         "&:hover": { boxShadow: "0 0 0 2px #7d90a1" },
     }),
 };
-
-// cards have an imageSource and this also acts as a unique ID
