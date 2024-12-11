@@ -43,12 +43,15 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     handleResetGameClick = () => {
-        const newCards = this.generateCards(this.images);
-        this.setState({
-            winConditionMet: false,
-            moveCount: 0,
-            cards: newCards,
-        });
+        this.unmatchAllCards();
+        setTimeout(() => {
+            const newCards = this.generateCards(this.images);
+            this.setState({
+                winConditionMet: false,
+                moveCount: 0,
+                cards: newCards,
+            });
+        }, 800);
     };
 
     generateCards = (cardImages: string[]): CardData[] => {
@@ -133,6 +136,18 @@ export default class Game extends Component<GameProps, GameState> {
                     return { ...card, isSelected: false };
                 }
                 return card;
+            });
+            return {
+                ...prevState,
+                cards: updatedCards,
+            };
+        });
+    };
+
+    unmatchAllCards = () => {
+        this.setState((prevState) => {
+            const updatedCards = prevState.cards.map((card) => {
+                return { ...card, isMatched: false };
             });
             return {
                 ...prevState,
