@@ -22,7 +22,6 @@ type GameState = {
 
 export default class Game extends Component<GameProps, GameState> {
     images: string[];
-    cards: CardData[];
     idCounter: number;
     constructor(props: GameProps) {
         super(props);
@@ -35,15 +34,19 @@ export default class Game extends Component<GameProps, GameState> {
             "/images/duck.jpg",
         ];
         this.idCounter = 0;
-        this.cards = this.generateCards(this.images);
         this.state = {
             moveCount: 0,
-            cards: this.cards,
+            cards: this.generateCards(this.images),
             winConditionMet: false,
         };
         this.handleResetGameClick = this.handleResetGameClick.bind(this);
     }
 
+    componentDidMount() {
+        this.setState((prevState) => ({
+            cards: shuffleCards(prevState.cards),
+        }));
+    }
     handleResetGameClick = () => {
         this.unmatchAllCards();
         setTimeout(() => {
@@ -51,7 +54,7 @@ export default class Game extends Component<GameProps, GameState> {
             this.setState({
                 winConditionMet: false,
                 moveCount: 0,
-                cards: newCards,
+                cards: shuffleCards(this.state.cards),
             });
         }, 800);
     };
@@ -75,9 +78,7 @@ export default class Game extends Component<GameProps, GameState> {
             this.idCounter++;
             newStack.push(cardData1, cardData2);
         });
-
-        const shuffledCards = shuffleCards(newStack);
-        return shuffledCards;
+        return newStack;
     };
 
     handleUnknownCardClick = (
