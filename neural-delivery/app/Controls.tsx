@@ -32,14 +32,16 @@ const style = {
         padding: "1rem",
         gap: "1rem",
         height: "100%",
+        margin: "1rem",
     }),
     countContainer: css({
         fontSize: "2rem",
         color: "#008E97",
+        width: "4rem",
+        textAlign: "center",
     }),
     moveCountContainer: css({
         display: "flex",
         alignItems: "center",
-        gap: "1rem",
     }),
 };

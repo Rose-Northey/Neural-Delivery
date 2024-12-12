@@ -23,6 +23,7 @@ type GameState = {
 export default class Game extends Component<GameProps, GameState> {
     images: string[];
     cards: CardData[];
+    idCounter: number;
     constructor(props: GameProps) {
         super(props);
         this.images = [
@@ -33,6 +34,7 @@ export default class Game extends Component<GameProps, GameState> {
             "/images/plant.jpg",
             "/images/duck.jpg",
         ];
+        this.idCounter = 0;
         this.cards = this.generateCards(this.images);
         this.state = {
             moveCount: 0,
@@ -61,18 +63,21 @@ export default class Game extends Component<GameProps, GameState> {
                 image: image,
                 isMatched: false,
                 isSelected: false,
-                id: newStack.length,
+                id: this.idCounter,
             };
+            this.idCounter++;
             const cardData2 = {
                 image: image,
                 isMatched: false,
                 isSelected: false,
-                id: newStack.length + 1,
+                id: this.idCounter,
             };
+            this.idCounter++;
             newStack.push(cardData1, cardData2);
         });
 
-        return shuffleCards(newStack);
+        const shuffledCards = shuffleCards(newStack);
+        return shuffledCards;
     };
 
     handleUnknownCardClick = (
