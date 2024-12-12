@@ -50,7 +50,6 @@ export default class Game extends Component<GameProps, GameState> {
     handleResetGameClick = () => {
         this.unmatchAllCards();
         setTimeout(() => {
-            const newCards = this.generateCards(this.images);
             this.setState({
                 winConditionMet: false,
                 moveCount: 0,
