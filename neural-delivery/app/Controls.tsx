@@ -5,7 +5,23 @@ type ControlsProps = {
     onResetGameClick: () => void;
     moveCount: number;
 };
-export default class Controls extends Component<ControlsProps> {
+
+export default function Controls({
+    onResetGameClick,
+    moveCount,
+}: ControlsProps) {
+    return (
+        <div className={style.controlsContainer}>
+            <div className={style.moveCountContainer}>
+                MoveCount:
+                <div className={style.countContainer}>{moveCount}</div>
+            </div>
+            <button onClick={onResetGameClick}>New Game</button>
+        </div>
+    );
+}
+
+export class ControlsClass extends Component<ControlsProps> {
     constructor(props: ControlsProps) {
         super(props);
     }
