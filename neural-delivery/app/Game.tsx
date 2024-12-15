@@ -3,7 +3,7 @@ import Controls from "./Controls";
 import { css, cx } from "@emotion/css";
 import shuffleCards from "./shuffleCards";
 
-import Card, { CardFunctional } from "./Card";
+import Card from "./Card";
 
 type GameProps = {};
 
@@ -28,10 +28,10 @@ export default class Game extends Component<GameProps, GameState> {
         this.images = [
             "/images/blackCat.jpg",
             "/images/horse.jpg",
-            // "/images/box.jpg",
-            // "/images/uke.jpg",
-            // "/images/plant.jpg",
-            // "/images/duck.jpg",
+            "/images/box.jpg",
+            "/images/uke.jpg",
+            "/images/plant.jpg",
+            "/images/duck.jpg",
         ];
         this.idCounter = 0;
         this.isWon = false;
@@ -192,7 +192,7 @@ export default class Game extends Component<GameProps, GameState> {
                         <div className={styles.grid}>
                             {this.state.cards.map((cardData) => {
                                 return (
-                                    <CardFunctional
+                                    <Card
                                         key={cardData.id}
                                         onUnknownCardClick={
                                             this.handleUnknownCardClick

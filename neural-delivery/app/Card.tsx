@@ -9,52 +9,49 @@ interface NewCardProps {
     isMatched: boolean;
 }
 
-export default class Card extends Component<NewCardProps> {
-    constructor(props: NewCardProps) {
-        super(props);
-    }
+export default function Card({
+    image,
+    id,
+    onUnknownCardClick,
+    isSelected,
+    isMatched,
+}: NewCardProps) {
+    return (
+        <>
+            <div className={style.outerContainer.default}>
+                <div
+                    className={cx(
+                        style.innerContainer.default,
+                        isMatched || isSelected
+                            ? style.innerContainer.isFlipped
+                            : ""
+                    )}
+                >
+                    <img
+                        onClick={() =>
+                            isSelected || isMatched
+                                ? null
+                                : onUnknownCardClick(id, image)
+                        }
+                        className={style.frontOfCard.default}
+                        src="/images/unknown.jpg"
+                    />
 
-    render() {
-        return (
-            <>
-                <div className={style.outerContainer.default}>
-                    <div
-                        className={cx(
-                            style.innerContainer.default,
-                            this.props.isMatched || this.props.isSelected
-                                ? style.innerContainer.isFlipped
-                                : ""
-                        )}
-                    >
-                        <img
-                            onClick={() =>
-                                this.props.isSelected || this.props.isMatched
-                                    ? null
-                                    : this.props.onUnknownCardClick(
-                                          this.props.id,
-                                          this.props.image
-                                      )
-                            }
-                            className={style.frontOfCard.default}
-                            src="/images/unknown.jpg"
-                        />
-
-                        <img
-                            className={
-                                this.props.isMatched
-                                    ? style.backOfCard.default
-                                    : cx(
-                                          style.backOfCard.default,
-                                          style.backOfCard.isSelected
-                                      )
-                            }
-                            src={this.props.image}
-                        />
-                    </div>
+                    <img
+                        className={
+                            isMatched
+                                ? style.backOfCard.default
+                                : cx(
+                                      style.backOfCard.default,
+                                      style.backOfCard.isSelected
+                                  )
+                        }
+                        src={image}
+                    />
                 </div>
-            </>
-        );
-    }
+            </div>
+        </>
+    );
 }
 
 const style = {
