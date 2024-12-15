@@ -21,25 +21,6 @@ export default function Controls({
     );
 }
 
-export class ControlsClass extends Component<ControlsProps> {
-    constructor(props: ControlsProps) {
-        super(props);
-    }
-    render() {
-        return (
-            <div className={style.controlsContainer}>
-                <div className={style.moveCountContainer}>
-                    MoveCount:
-                    <div className={style.countContainer}>
-                        {this.props.moveCount}
-                    </div>
-                </div>
-                <button onClick={this.props.onResetGameClick}>New Game</button>
-            </div>
-        );
-    }
-}
-
 const style = {
     controlsContainer: css({
         display: "flex",
