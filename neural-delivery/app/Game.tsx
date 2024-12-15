@@ -3,7 +3,7 @@ import Controls from "./Controls";
 import { css, cx } from "@emotion/css";
 import shuffleCards from "./shuffleCards";
 
-import Card from "./Card";
+import Card, { CardFunctional } from "./Card";
 
 type GameProps = {};
 
@@ -192,7 +192,7 @@ export default class Game extends Component<GameProps, GameState> {
                         <div className={styles.grid}>
                             {this.state.cards.map((cardData) => {
                                 return (
-                                    <Card
+                                    <CardFunctional
                                         key={cardData.id}
                                         onUnknownCardClick={
                                             this.handleUnknownCardClick
