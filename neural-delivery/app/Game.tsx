@@ -58,14 +58,47 @@ export default function Game() {
     useEffect(() => {
         setCards((prevCards) => shuffleCards(prevCards));
     }, []);
-    const handleResetGameClick = () => {
-        unmatchAllCards();
-        setTimeout(() => {
-            setMoveCount(0);
-            setCards((prev) => shuffleCards(prev));
-        }, 800);
-    };
 
+    function markPreviousAndCurrentCardsAsMatched(matchedImage: string) {
+        setCards((prevCards) =>
+            prevCards.map((card) => {
+                if (card.image === matchedImage) {
+                    return { ...card, isMatched: true, isSelected: false };
+                }
+                return card;
+            })
+        );
+    }
+    function markCurrentCardAsSelected(cardId: number) {
+        setCards((prevCards) =>
+            prevCards.map((card) => {
+                if (card.id === cardId) {
+                    return { ...card, isSelected: true };
+                }
+                return card;
+            })
+        );
+    }
+
+    function unmatchAllCards() {
+        setCards((prevCards) =>
+            prevCards.map((card) => {
+                return { ...card, isMatched: false };
+            })
+        );
+    }
+    function unselectAllCards() {
+        setCards((prevCards) =>
+            prevCards.map((card) => {
+                if (card.isSelected === true) {
+                    return { ...card, isSelected: false };
+                }
+                return card;
+            })
+        );
+    }
+
+    const determineIfIsWon = () => cards.every((card) => card.isMatched);
     function handleUnknownCardClick(
         currentCardId: number,
         currentCardImage: string
@@ -92,53 +125,13 @@ export default function Game() {
             }
         }
     }
-
-    function markPreviousAndCurrentCardsAsMatched(matchedImage: string) {
-        setCards((prevCards) => {
-            const updatedCards = prevCards.map((card) => {
-                if (card.image === matchedImage) {
-                    return { ...card, isMatched: true, isSelected: false };
-                }
-                return card;
-            });
-            return updatedCards;
-        });
+    function handleResetGameClick() {
+        unmatchAllCards();
+        setTimeout(() => {
+            setMoveCount(0);
+            setCards((prev) => shuffleCards(prev));
+        }, 800);
     }
-    function markCurrentCardAsSelected(cardId: number) {
-        setCards((prevCards) => {
-            const updatedCards = prevCards.map((card) => {
-                if (card.id === cardId) {
-                    return { ...card, isSelected: true };
-                }
-                return card;
-            });
-            return updatedCards;
-        });
-    }
-
-    function unmatchAllCards() {
-        setCards((prevState) => {
-            const updatedCards = cards.map((card) => {
-                return { ...card, isMatched: false };
-            });
-            return updatedCards;
-        });
-    }
-    function unselectAllCards() {
-        setCards((prevCards) => {
-            const updatedCards = prevCards.map((card) => {
-                if (card.isSelected === true) {
-                    return { ...card, isSelected: false };
-                }
-                return card;
-            });
-            return updatedCards;
-        });
-    }
-
-    const determineIfIsWon = () => {
-        return cards.every((card) => card.isMatched);
-    };
 
     return (
         <>
