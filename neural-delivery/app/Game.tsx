@@ -1,7 +1,8 @@
-import { Component } from "react";
+import { Component, useEffect } from "react";
 import Controls from "./Controls";
 import { css, cx } from "@emotion/css";
 import shuffleCards from "./shuffleCards";
+import { useState } from "react";
 
 import Card from "./Card";
 
@@ -19,10 +20,175 @@ type GameState = {
     cards: CardData[];
 };
 
-export default class Game extends Component<GameProps, GameState> {
+function generateCards(cardImages: string[]): CardData[] {
+    let idCounter = 0;
+    const newStack: CardData[] = [];
+    cardImages.forEach((image) => {
+        const cardData1 = {
+            image: image,
+            isMatched: false,
+            isSelected: false,
+            id: idCounter,
+        };
+        idCounter++;
+        const cardData2 = {
+            image: image,
+            isMatched: false,
+            isSelected: false,
+            id: idCounter,
+        };
+        idCounter++;
+        newStack.push(cardData1, cardData2);
+    });
+    return newStack;
+}
+
+export default function Game() {
+    const easyImages = [
+        "/images/blackCat.jpg",
+        "/images/horse.jpg",
+        "/images/box.jpg",
+        "/images/uke.jpg",
+        "/images/plant.jpg",
+        "/images/duck.jpg",
+    ];
+    const [images, setImages] = useState(easyImages);
+    const [cards, setCards] = useState<CardData[]>(generateCards(images));
+    const [moveCount, setMoveCount] = useState(0);
+    useEffect(() => {
+        setCards((prevCards) => shuffleCards(prevCards));
+    }, []);
+    const handleResetGameClick = () => {
+        unmatchAllCards();
+        setTimeout(() => {
+            setMoveCount(0);
+            setCards((prev) => shuffleCards(prev));
+        }, 800);
+    };
+
+    function handleUnknownCardClick(
+        currentCardId: number,
+        currentCardImage: string
+    ) {
+        const allSelectedCards = cards.filter(
+            (card) => card.isSelected === true
+        );
+
+        if (allSelectedCards.length < 2) {
+            const previousCard = allSelectedCards[0];
+            markCurrentCardAsSelected(currentCardId);
+            if (previousCard) {
+                setTimeout(() => {
+                    if (previousCard.image === currentCardImage) {
+                        markPreviousAndCurrentCardsAsMatched(
+                            previousCard.image
+                        );
+                    } else {
+                        unselectAllCards();
+                    }
+                }, 1000);
+            } else {
+                setMoveCount((prev) => prev + 1);
+            }
+        }
+    }
+
+    function markPreviousAndCurrentCardsAsMatched(matchedImage: string) {
+        setCards((prevCards) => {
+            const updatedCards = prevCards.map((card) => {
+                if (card.image === matchedImage) {
+                    return { ...card, isMatched: true, isSelected: false };
+                }
+                return card;
+            });
+            return updatedCards;
+        });
+    }
+    function markCurrentCardAsSelected(cardId: number) {
+        setCards((prevCards) => {
+            const updatedCards = prevCards.map((card) => {
+                if (card.id === cardId) {
+                    return { ...card, isSelected: true };
+                }
+                return card;
+            });
+            return updatedCards;
+        });
+    }
+
+    function unmatchAllCards() {
+        setCards((prevState) => {
+            const updatedCards = cards.map((card) => {
+                return { ...card, isMatched: false };
+            });
+            return updatedCards;
+        });
+    }
+    function unselectAllCards() {
+        setCards((prevCards) => {
+            const updatedCards = prevCards.map((card) => {
+                if (card.isSelected === true) {
+                    return { ...card, isSelected: false };
+                }
+                return card;
+            });
+            return updatedCards;
+        });
+    }
+
+    const determineIfIsWon = () => {
+        return cards.every((card) => card.isMatched);
+    };
+
+    return (
+        <>
+            <div className={styles.gameContainer}>
+                <div
+                    className={
+                        determineIfIsWon()
+                            ? styles.winBanner.default
+                            : cx(
+                                  styles.winBanner.default,
+                                  styles.winBanner.notWonYet
+                              )
+                    }
+                >
+                    YOU WIN!
+                </div>
+                <div className={styles.gridAndControlsContainer}>
+                    <div className={styles.grid}>
+                        {cards.map((cardData) => {
+                            return (
+                                <Card
+                                    key={cardData.id}
+                                    onUnknownCardClick={handleUnknownCardClick}
+                                    id={cardData.id}
+                                    image={cardData.image}
+                                    isSelected={cardData.isSelected}
+                                    isMatched={cardData.isMatched}
+                                />
+                            );
+                        })}
+                    </div>
+                    <div
+                        className={
+                            determineIfIsWon() ? styles.controls.winState : ""
+                        }
+                    >
+                        <Controls
+                            onResetGameClick={handleResetGameClick}
+                            moveCount={moveCount}
+                        />
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
+
+export class GameClass extends Component<GameProps, GameState> {
     images: string[];
     idCounter: number;
-    isWon: boolean;
     constructor(props: GameProps) {
         super(props);
         this.images = [
@@ -34,7 +200,6 @@ export default class Game extends Component<GameProps, GameState> {
             "/images/duck.jpg",
         ];
         this.idCounter = 0;
-        this.isWon = false;
         this.state = {
             moveCount: 0,
             cards: this.generateCards(this.images),
