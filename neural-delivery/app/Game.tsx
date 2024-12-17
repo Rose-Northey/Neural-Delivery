@@ -143,7 +143,12 @@ export default function Game() {
                     YOU WIN!
                 </div>
                 <div className={styles.gridAndControlsContainer}>
-                    <div className={styles.grid}>
+                    <div
+                        className={cx(
+                            styles.grid.default,
+                            styles.grid.sixImages
+                        )}
+                    >
                         {cards.map((cardData) => {
                             return (
                                 <Card
@@ -197,15 +202,19 @@ const styles = {
         justifyContent: "center",
         alignItems: "center",
     }),
-    grid: css({
-        display: "flex",
-        flexWrap: "wrap",
-        maxWidth: "50%",
-        gap: "0.5rem",
-        "& img": {
-            width: "150px",
-        },
-    }),
+    grid: {
+        default: css({
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "0.5rem",
+            "& img": {
+                width: "150px",
+            },
+        }),
+        sixImages: css({
+            maxWidth: "50%",
+        }),
+    },
     controls: {
         winState: css({
             display: "hidden",
