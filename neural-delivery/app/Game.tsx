@@ -1,4 +1,4 @@
-import { Component, useEffect } from "react";
+import { useEffect } from "react";
 import Controls from "./Controls";
 import { css, cx } from "@emotion/css";
 import shuffleCards from "./shuffleCards";
@@ -92,30 +92,31 @@ export default function Game() {
     }
 
     const determineIfIsWon = () => cards.every((card) => card.isMatched);
+
     function handleUnknownCardClick(
         currentCardId: number,
         currentCardImage: string
     ) {
-        const allSelectedCards = cards.filter(
+        const previouslySelectedCards = cards.filter(
             (card) => card.isSelected === true
         );
+        if (previouslySelectedCards.length >= 2) {
+            return;
+        }
+        markCurrentCardAsSelected(currentCardId);
 
-        if (allSelectedCards.length < 2) {
-            const previousCard = allSelectedCards[0];
-            markCurrentCardAsSelected(currentCardId);
-            if (previousCard) {
-                setTimeout(() => {
-                    if (previousCard.image === currentCardImage) {
-                        markPreviousAndCurrentCardsAsMatched(
-                            previousCard.image
-                        );
-                    } else {
-                        unselectAllCards();
-                    }
-                }, 1000);
-            } else {
-                setMoveCount((prev) => prev + 1);
-            }
+        if (previouslySelectedCards.length === 0) {
+            setMoveCount((prev) => prev + 1);
+        } else {
+            setTimeout(() => {
+                if (previouslySelectedCards[0].image === currentCardImage) {
+                    markPreviousAndCurrentCardsAsMatched(
+                        previouslySelectedCards[0].image
+                    );
+                } else {
+                    unselectAllCards();
+                }
+            }, 1000);
         }
     }
     function handleResetGameClick() {
