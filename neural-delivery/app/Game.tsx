@@ -33,13 +33,35 @@ function generateCards(cardImages: string[]): CardData[] {
         idCounter++;
         newStack.push(cardData1, cardData2);
     });
-    return newStack;
+    return shuffleCards(newStack);
 }
 
 export default function Game() {
     const easyImages = [
         "/images/blackCat.jpg",
         "/images/horse.jpg",
+        "/images/box.jpg",
+        "/images/uke.jpg",
+        "/images/plant.jpg",
+        "/images/duck.jpg",
+    ];
+    const mediumImages = [
+        "/images/blackCat.jpg",
+        "/images/horse.jpg",
+        "/images/box.jpg",
+        "/images/uke.jpg",
+        "/images/plant.jpg",
+        "/images/duck.jpg",
+        "/images/plant.jpg",
+        "/images/duck.jpg",
+    ];
+    const hardImages = [
+        "/images/blackCat.jpg",
+        "/images/horse.jpg",
+        "/images/box.jpg",
+        "/images/uke.jpg",
+        "/images/plant.jpg",
+        "/images/duck.jpg",
         "/images/box.jpg",
         "/images/uke.jpg",
         "/images/plant.jpg",
@@ -140,15 +162,14 @@ export default function Game() {
                               )
                     }
                 >
-                    YOU WIN!
+                    <button onClick={handleResetGameClick}>New Game</button>
+                    <div>
+                        <div>YOU WIN!</div>
+                        <div>{`And it only took you ${moveCount} moves!`}</div>
+                    </div>
                 </div>
                 <div className={styles.gridAndControlsContainer}>
-                    <div
-                        className={cx(
-                            styles.grid.default,
-                            styles.grid.sixImages
-                        )}
-                    >
+                    <div className={styles.grid.default}>
                         {cards.map((cardData) => {
                             return (
                                 <Card
@@ -188,8 +209,14 @@ const styles = {
     }),
     winBanner: {
         default: css({
-            display: "absolute",
+            width: "100%",
+            height: "90%",
+            position: "absolute",
             zIndex: "4",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#ffffFFdd",
         }),
         notWonYet: css({
             display: "none",
@@ -197,22 +224,18 @@ const styles = {
     },
     gridAndControlsContainer: css({
         display: "flex",
-        width: "100%",
         padding: "1rem",
         justifyContent: "center",
         alignItems: "center",
+        height: "90%",
     }),
     grid: {
         default: css({
             display: "flex",
             flexWrap: "wrap",
             gap: "0.5rem",
-            "& img": {
-                width: "150px",
-            },
-        }),
-        sixImages: css({
-            maxWidth: "50%",
+            justifyContent: "center",
+            maxWidth: "630px",
         }),
     },
     controls: {

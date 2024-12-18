@@ -1,5 +1,4 @@
 import { css } from "@emotion/css";
-import { Component } from "react";
 
 type ControlsProps = {
     onResetGameClick: () => void;
