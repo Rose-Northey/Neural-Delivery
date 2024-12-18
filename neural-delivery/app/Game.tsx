@@ -5,6 +5,7 @@ import shuffleCards from "./shuffleCards";
 import { useState } from "react";
 
 import Card from "./Card";
+import WinBanner from "./WinScreen";
 
 export type CardData = {
     image: string;
@@ -33,7 +34,7 @@ function generateCards(cardImages: string[]): CardData[] {
         idCounter++;
         newStack.push(cardData1, cardData2);
     });
-    return shuffleCards(newStack);
+    return newStack;
 }
 
 export default function Game() {
@@ -69,10 +70,16 @@ export default function Game() {
     ];
     const [images, setImages] = useState(easyImages);
     const [cards, setCards] = useState<CardData[]>(generateCards(images));
-    const [moveCount, setMoveCount] = useState(0);
+    const [moveCount, setMoveCount] = useState<number>(0);
+    const [isGameWon, setIsGameWon] = useState<boolean>(false);
     useEffect(() => {
         setCards((prevCards) => shuffleCards(prevCards));
     }, []);
+    useEffect(() => {
+        if (determineIfIsWon()) {
+            setIsGameWon(true);
+        }
+    }, cards);
 
     function markPreviousAndCurrentCardsAsMatched(matchedImage: string) {
         setCards((prevCards) =>
@@ -113,8 +120,6 @@ export default function Game() {
         );
     }
 
-    const determineIfIsWon = () => cards.every((card) => card.isMatched);
-
     function handleUnknownCardClick(
         currentCardId: number,
         currentCardImage: string
@@ -143,31 +148,22 @@ export default function Game() {
     }
     function handleResetGameClick() {
         unmatchAllCards();
+        setIsGameWon(false);
         setTimeout(() => {
             setMoveCount(0);
             setCards((prev) => shuffleCards(prev));
         }, 800);
     }
+    const determineIfIsWon = () => true; //cards.every((card) => card.isMatched);
 
     return (
         <>
             <div className={styles.gameContainer}>
-                <div
-                    className={
-                        determineIfIsWon()
-                            ? styles.winBanner.default
-                            : cx(
-                                  styles.winBanner.default,
-                                  styles.winBanner.notWonYet
-                              )
-                    }
-                >
-                    <button onClick={handleResetGameClick}>New Game</button>
-                    <div>
-                        <div>YOU WIN!</div>
-                        <div>{`And it only took you ${moveCount} moves!`}</div>
-                    </div>
-                </div>
+                <WinBanner
+                    onResetGameClick={handleResetGameClick}
+                    moveCount={moveCount}
+                    isGameWon={isGameWon}
+                />
                 <div className={styles.gridAndControlsContainer}>
                     <div className={styles.grid.default}>
                         {cards.map((cardData) => {
@@ -183,11 +179,7 @@ export default function Game() {
                             );
                         })}
                     </div>
-                    <div
-                        className={
-                            determineIfIsWon() ? styles.controls.winState : ""
-                        }
-                    >
+                    <div className={isGameWon ? styles.controls.winState : ""}>
                         <Controls
                             onResetGameClick={handleResetGameClick}
                             moveCount={moveCount}
@@ -207,21 +199,6 @@ const styles = {
 
         backgroundColor: "#0066b2",
     }),
-    winBanner: {
-        default: css({
-            width: "100%",
-            height: "90%",
-            position: "absolute",
-            zIndex: "4",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#ffffFFdd",
-        }),
-        notWonYet: css({
-            display: "none",
-        }),
-    },
     gridAndControlsContainer: css({
         display: "flex",
         padding: "1rem",
