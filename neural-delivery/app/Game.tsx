@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import Controls from "./Controls";
-import { css, cx } from "@emotion/css";
+import { css } from "@emotion/css";
 import shuffleCards from "./shuffleCards";
 import { useState } from "react";
 
 import Card from "./Card";
-import WinBanner from "./WinScreen";
+import WinBanner from "./WinBanner";
 
 export type CardData = {
     image: string;
