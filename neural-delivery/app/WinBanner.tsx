@@ -1,4 +1,5 @@
 import { css } from "@emotion/css";
+import { colors } from "./colors";
 
 type WinBannerProps = {
     onResetGameClick: () => void;
@@ -13,27 +14,55 @@ export default function WinBanner({
 }: WinBannerProps) {
     return (
         <div className={isGameWon ? styles.gameWon : styles.notWonYet}>
-            <button onClick={onResetGameClick}>New Game</button>
+            <button className={styles.newGameButton} onClick={onResetGameClick}>
+                New Game
+            </button>
             <div>
-                <div>YOU WIN!</div>
-                <div>{`And it only took you ${moveCount} moves!`}</div>
+                <div className={styles.winText}>YOU WIN!</div>
+                <div
+                    className={styles.subHeader}
+                >{`And it only took you ${moveCount} moves!`}</div>
             </div>
         </div>
     );
 }
 
 const styles = {
+    newGameButton: css({
+        height: "12rem",
+        width: "16rem",
+        margin: "2rem",
+        fontSize: "3rem",
+        padding: "2rem",
+        border: `5px solid ${colors.lightBlue}`,
+        backgroundColor: colors.lightBlue,
+        "&&:hover": {
+            backgroundColor: colors.orange,
+        },
+    }),
     gameWon: css({
         width: "100%",
-        height: "90%",
+        height: "100%",
         position: "absolute",
         zIndex: "4",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#ffffFFdd",
+        backgroundColor: `${colors.blackBlue}bb`,
+        color: colors.lightBlue,
+        fontWeight: "bold",
     }),
     notWonYet: css({
         display: "none",
+        fontSize: "9rem",
+    }),
+    winText: css({
+        fontSize: "10rem",
+        color: colors.orange,
+    }),
+
+    subHeader: css({
+        fontSize: "3.15rem",
+        marginTop: "1rem",
     }),
 };

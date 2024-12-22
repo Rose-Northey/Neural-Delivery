@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import Controls from "./Controls";
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import shuffleCards from "./shuffleCards";
 import { useState } from "react";
 
 import Card from "./Card";
 import WinBanner from "./WinBanner";
+import { colors } from "./colors";
+import DifficultySelect from "./DifficultySelect";
 
 export type CardData = {
     image: string;
@@ -45,6 +47,12 @@ export default function Game() {
         "/images/uke.jpg",
         "/images/plant.jpg",
         "/images/duck.jpg",
+        "/images/capybara.jpg",
+        "/images/.midnight.jpg",
+        "/images/.tomato.jpg",
+        "/images/.toothbrush.jpg",
+        "/images/.boredomjpg",
+        "/images/alligator.jpg",
     ];
     const mediumImages = [
         "/images/blackCat.jpg",
@@ -68,10 +76,11 @@ export default function Game() {
         "/images/plant.jpg",
         "/images/duck.jpg",
     ];
-    const [images, setImages] = useState(easyImages);
+    const [images, setImages] = useState();
     const [cards, setCards] = useState<CardData[]>(generateCards(images));
     const [moveCount, setMoveCount] = useState<number>(0);
     const [isGameWon, setIsGameWon] = useState<boolean>(false);
+
     useEffect(() => {
         setCards((prevCards) => shuffleCards(prevCards));
     }, []);
@@ -154,11 +163,31 @@ export default function Game() {
             setCards((prev) => shuffleCards(prev));
         }, 800);
     }
-    const determineIfIsWon = () => true; //cards.every((card) => card.isMatched);
+    const determineIfIsWon = () => cards.every((card) => card.isMatched);
+    const onDifficultySelectionClick = (currentImages: string[]) => {
+        //when difficulty is selected, there shouldn't be any images already selected (should be an empty array)
+        // in the DifficultySelect component generateCards is run ->
+        //    - inputs: number of images
+        //      it uses the number of images to randomly select which images are to be used
+        // function called "selectUnshuffledCards" which chooses which images are to be displayed randomly and also gives
+    };
 
     return (
         <>
-            <div className={styles.gameContainer}>
+            <DifficultySelect
+                areCardImagesSelected={Boolean(images)}
+                onDifficultySelectionClick={onDifficultySelectionClick}
+            />
+            <div
+                className={
+                    isGameWon
+                        ? cx(
+                              styles.gameContainer.winState,
+                              styles.gameContainer.default
+                          )
+                        : styles.gameContainer.default
+                }
+            >
                 <WinBanner
                     onResetGameClick={handleResetGameClick}
                     moveCount={moveCount}
@@ -179,12 +208,12 @@ export default function Game() {
                             );
                         })}
                     </div>
-                    <div className={isGameWon ? styles.controls.winState : ""}>
-                        <Controls
-                            onResetGameClick={handleResetGameClick}
-                            moveCount={moveCount}
-                        />
-                    </div>
+
+                    <Controls
+                        onResetGameClick={handleResetGameClick}
+                        moveCount={moveCount}
+                        isGameWon={isGameWon}
+                    />
                 </div>
             </div>
         </>
@@ -192,13 +221,23 @@ export default function Game() {
 }
 
 const styles = {
-    gameContainer: css({
-        minHeight: "90%",
-        width: "100%",
-        position: "relative",
+    gameContainer: {
+        default: css({
+            minHeight: "90%",
+            width: "100%",
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: colors.midBlue,
+        }),
+        winState: css({
+            "&&": {
+                backgroundColor: colors.blackBlue,
+            },
+        }),
+    },
 
-        backgroundColor: "#0066b2",
-    }),
     gridAndControlsContainer: css({
         display: "flex",
         padding: "1rem",

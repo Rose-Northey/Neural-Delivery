@@ -1,30 +1,36 @@
 import { css } from "@emotion/css";
+import { colors } from "./colors";
 
 type ControlsProps = {
     onResetGameClick: () => void;
     moveCount: number;
+    isGameWon: boolean;
 };
 
 export default function Controls({
     onResetGameClick,
     moveCount,
+    isGameWon,
 }: ControlsProps) {
     return (
-        <div className={style.controlsContainer}>
-            <div className={style.moveCountContainer}>
+        <div className={isGameWon ? styles.winState : styles.controlsContainer}>
+            <div className={styles.moveCountContainer}>
                 MoveCount:
-                <div className={style.countContainer}>{moveCount}</div>
+                <div className={styles.countContainer}>{moveCount}</div>
             </div>
             <button onClick={onResetGameClick}>New Game</button>
         </div>
     );
 }
 
-const style = {
+const styles = {
+    winState: css({
+        visibility: "hidden",
+    }),
     controlsContainer: css({
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "#B9D9EB",
+        backgroundColor: colors.lightBlue,
         padding: "1rem",
         gap: "1rem",
         height: "100%",
