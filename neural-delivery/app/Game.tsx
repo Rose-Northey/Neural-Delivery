@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import Controls from "./Controls";
 import { css, cx } from "@emotion/css";
-import shuffleCards from "./shuffleCards";
+import shuffleCards from "./shuffleItems";
 import { useState } from "react";
 
 import Card from "./Card";
 import WinBanner from "./WinBanner";
 import { colors } from "./colors";
 import DifficultySelect from "./DifficultySelect";
+import shuffleItems from "./shuffleItems";
 
 export type CardData = {
     image: string;
@@ -16,10 +17,39 @@ export type CardData = {
     id: number;
 };
 
-function generateCards(cardImages: string[]): CardData[] {
+enum ImagePairsPerDifficulty {
+    easy = 6,
+    medium = 8,
+    hard = 10,
+}
+
+const allImages = [
+    "/images/blackCat.jpg",
+    "/images/horse.jpg",
+    "/images/box.jpg",
+    "/images/uke.jpg",
+    "/images/plant.jpg",
+    "/images/duck.jpg",
+    "/images/capybara.jpg",
+    "/images/.midnight.jpg",
+    "/images/.tomato.jpg",
+    "/images/.toothbrush.jpg",
+    "/images/.boredomjpg",
+    "/images/alligator.jpg",
+];
+
+function selectImagePairs(
+    difficulty: keyof typeof ImagePairsPerDifficulty
+): string[] {
+    const numberOfPairs = ImagePairsPerDifficulty[difficulty];
+    return shuffleItems<string>(allImages).slice(0, numberOfPairs);
+}
+
+function generateCards(difficulty: string): CardData[] {
+    const images = selectImagePairs("easy");
     let idCounter = 0;
     const newStack: CardData[] = [];
-    cardImages.forEach((image) => {
+    images.forEach((image) => {
         const cardData1 = {
             image: image,
             isMatched: false,
@@ -38,6 +68,29 @@ function generateCards(cardImages: string[]): CardData[] {
     });
     return newStack;
 }
+
+// function generateCards(cardImages: string[]): CardData[] {
+//     let idCounter = 0;
+//     const newStack: CardData[] = [];
+//     cardImages.forEach((image) => {
+//         const cardData1 = {
+//             image: image,
+//             isMatched: false,
+//             isSelected: false,
+//             id: idCounter,
+//         };
+//         idCounter++;
+//         const cardData2 = {
+//             image: image,
+//             isMatched: false,
+//             isSelected: false,
+//             id: idCounter,
+//         };
+//         idCounter++;
+//         newStack.push(cardData1, cardData2);
+//     });
+//     return newStack;
+// }
 
 export default function Game() {
     const easyImages = [
@@ -77,7 +130,7 @@ export default function Game() {
         "/images/duck.jpg",
     ];
     const [images, setImages] = useState();
-    const [cards, setCards] = useState<CardData[]>(generateCards(images));
+    const [cards, setCards] = useState<CardData[]>([]);
     const [moveCount, setMoveCount] = useState<number>(0);
     const [isGameWon, setIsGameWon] = useState<boolean>(false);
 
@@ -164,19 +217,24 @@ export default function Game() {
         }, 800);
     }
     const determineIfIsWon = () => cards.every((card) => card.isMatched);
-    const onDifficultySelectionClick = (currentImages: string[]) => {
-        //when difficulty is selected, there shouldn't be any images already selected (should be an empty array)
-        // in the DifficultySelect component generateCards is run ->
-        //    - inputs: number of images
-        //      it uses the number of images to randomly select which images are to be used
-        // function called "selectUnshuffledCards" which chooses which images are to be displayed randomly and also gives
-    };
+
+    // const onDifficultySelectionClick = (difficulty:) => {
+    //     //when difficulty is selected, there shouldn't be any images already selected (should be an empty array)
+    //     // in the DifficultySelect component generateCards is run ->
+    //     //    - inputs: number of images
+    //     //      it uses the number of images to randomly select which images are to be used
+    //     // function called "selectUnshuffledCards" which chooses which images are to be displayed randomly and also gives
+    // };
+
+    function onDifficultySelectionClick(difficulty: string) {
+        generateCards(difficulty);
+    }
 
     return (
         <>
             <DifficultySelect
                 areCardImagesSelected={Boolean(images)}
-                onDifficultySelectionClick={onDifficultySelectionClick}
+                onDifficultySelectionClick={() => onDifficultySelectionClick}
             />
             <div
                 className={
