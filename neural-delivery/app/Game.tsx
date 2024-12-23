@@ -152,9 +152,12 @@ export default function Game() {
     }
     const determineIfIsWon = () => cards.every((card) => card.isMatched);
 
-    function onDifficultySelectionClick(difficulty: Difficulties) {
-        const newCards = generateCards(difficulty);
-        setCards(newCards);
+    function onDifficultySelectionClick(inputDifficulty: Difficulties) {
+        setDifficulty(inputDifficulty);
+        if (difficulty) {
+            const newCards = generateCards(difficulty);
+            setCards(newCards);
+        }
     }
 
     return (
