@@ -1,9 +1,6 @@
-import { useEffect } from "react";
 import Controls from "./Controls";
 import { css, cx } from "@emotion/css";
-import shuffleCards from "./shuffleItems";
 import { useState } from "react";
-
 import Card from "./Card";
 import WinBanner from "./WinBanner";
 import { colors } from "./colors";
@@ -150,7 +147,6 @@ export default function Game() {
             }, 800);
         }
     }
-    const determineIfIsWon = () => cards.every((card) => card.isMatched);
 
     function onDifficultySelectionClick(inputDifficulty: Difficulties) {
         setDifficulty(inputDifficulty);
