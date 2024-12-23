@@ -45,8 +45,8 @@ function selectImagePairs(
     return shuffleItems<string>(allImages).slice(0, numberOfPairs);
 }
 
-function generateCards(difficulty: string): CardData[] {
-    const images = selectImagePairs("easy");
+function generateCards(difficulty: "easy" | "medium" | "hard"): CardData[] {
+    const images = selectImagePairs(difficulty);
     let idCounter = 0;
     const newStack: CardData[] = [];
     images.forEach((image) => {
@@ -66,7 +66,7 @@ function generateCards(difficulty: string): CardData[] {
         idCounter++;
         newStack.push(cardData1, cardData2);
     });
-    return newStack;
+    return shuffleItems(newStack);
 }
 
 // function generateCards(cardImages: string[]): CardData[] {
@@ -226,15 +226,18 @@ export default function Game() {
     //     // function called "selectUnshuffledCards" which chooses which images are to be displayed randomly and also gives
     // };
 
-    function onDifficultySelectionClick(difficulty: string) {
-        generateCards(difficulty);
+    function onDifficultySelectionClick(
+        difficulty: "easy" | "medium" | "hard"
+    ) {
+        const newCards = generateCards(difficulty);
+        setCards(newCards);
     }
 
     return (
         <>
             <DifficultySelect
                 areCardImagesSelected={Boolean(images)}
-                onDifficultySelectionClick={() => onDifficultySelectionClick}
+                onDifficultySelectionClick={onDifficultySelectionClick}
             />
             <div
                 className={

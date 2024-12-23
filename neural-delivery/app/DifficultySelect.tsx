@@ -3,7 +3,9 @@ import { CardData } from "./Game";
 
 type DifficultySelectProps = {
     areCardImagesSelected: boolean;
-    onDifficultySelectionClick: (difficulty: string) => {};
+    onDifficultySelectionClick: (
+        difficulty: "easy" | "medium" | "hard"
+    ) => void;
 };
 
 export default function DifficultySelect(props: DifficultySelectProps) {
