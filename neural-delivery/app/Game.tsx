@@ -37,16 +37,17 @@ const allImages = [
 
 export default function Game() {
     const [cards, setCards] = useState<CardData[]>([]);
-    const [cardClickCount, setCardClickCount] = useState<number>(0);
     const [gameState, setGameState] = useState<GameState>(
         GameState.difficultyNotSelected
     );
+    const [userMoves, setUserMoves] = useState<number[]>([]);
 
     useEffect(() => {
         if (determineIfIsWon()) {
             setGameState(GameState.gameIsWon);
+            console.log(userMoves);
         }
-    }, [cardClickCount]);
+    }, [userMoves]);
 
     function generateCards(numberofCards = cards.length) {
         const numberOfCardPairs = numberofCards / 2;
@@ -126,27 +127,26 @@ export default function Game() {
             return;
         }
         markCurrentCardAsSelected(currentCardId);
+
         if (previouslySelectedCards.length === 1) {
-            if (previouslySelectedCards[0].image === currentCardImage) {
-                setTimeout(() => {
+            setTimeout(() => {
+                // allow user to see selected state before match or unselect
+                if (previouslySelectedCards[0].image === currentCardImage) {
                     markPreviousAndCurrentCardsAsMatched(
                         previouslySelectedCards[0].image
                     );
-                    setCardClickCount((prev) => prev + 1);
-                }, 800);
-            } else {
-                setTimeout(() => {
+                } else {
                     unselectAllCards();
-                    setCardClickCount((prev) => prev + 1);
-                }, 1000);
-            }
+                }
+                setUserMoves((prev) => [...prev, currentCardId]);
+            }, 1000);
         } else {
-            setCardClickCount((prev) => prev + 1);
+            setUserMoves((prev) => [...prev, currentCardId]);
         }
     }
 
     function handleResetGameClick() {
-        setCardClickCount(0);
+        setUserMoves([]);
         setGameState(GameState.gameInProgress);
         unmatchAllCards();
 
@@ -167,7 +167,7 @@ export default function Game() {
     };
 
     const finishGamePrematurely = () => {
-        setCardClickCount(0);
+        setUserMoves([]);
         setCards([]);
     };
 
@@ -194,7 +194,7 @@ export default function Game() {
                 />
                 <WinBanner
                     onResetGameClick={handleResetGameClick}
-                    moveCount={Math.floor(cardClickCount / 2)}
+                    moveCount={Math.floor(userMoves.length / 2)}
                     gameState={gameState}
                 />
                 <div className={styles.gridAndControlsContainer}>
@@ -216,7 +216,7 @@ export default function Game() {
                     <Controls
                         onChangeDifficultyClick={handleChangeDifficultyClick}
                         onResetGameClick={handleResetGameClick}
-                        moveCount={Math.floor(cardClickCount / 2)}
+                        moveCount={Math.floor(userMoves.length / 2)}
                         gameState={gameState}
                     />
                 </div>
@@ -265,3 +265,8 @@ const styles = {
         }),
     },
 };
+
+// record gameMoves
+// push game moves into an array - IDs
+// store these IDs in a state
+// offer the replay button when the user has won
