@@ -28,21 +28,10 @@ const allImages = [
     "/images/boredom.jpg",
     "/images/alligator.jpg",
 ];
-// use the number of cards to generate the next lot of cards
-// when difficulty is set, this sends the correct number of cards through on generate cards
 
 export default function Game() {
     const [cards, setCards] = useState<CardData[]>([]);
     const [moveCount, setMoveCount] = useState<number>(0);
-    const [isGameWon, setIsGameWon] = useState<boolean>(false);
-
-    useEffect(() => {
-        if (cards.length) {
-            if (determineIfIsWon()) {
-                setIsGameWon(true);
-            }
-        }
-    }, cards);
 
     function generateCards(numberofCards = cards.length): CardData[] {
         const numberOfCardPairs = numberofCards / 2;
@@ -139,7 +128,6 @@ export default function Game() {
     }
     function handleResetGameClick() {
         unmatchAllCards();
-        setIsGameWon(false);
         setTimeout(() => {
             setMoveCount(0);
             setCards(generateCards());
@@ -151,7 +139,7 @@ export default function Game() {
         setCards(newCards);
     }
     const determineIfIsWon = () => {
-        if (cards) {
+        if (cards.length) {
             return cards.every((card) => card.isMatched);
         }
         return false;
@@ -164,7 +152,7 @@ export default function Game() {
             />
             <div
                 className={
-                    isGameWon
+                    determineIfIsWon()
                         ? cx(
                               styles.gameContainer.winState,
                               styles.gameContainer.default
@@ -175,7 +163,7 @@ export default function Game() {
                 <WinBanner
                     onResetGameClick={handleResetGameClick}
                     moveCount={moveCount}
-                    isGameWon={isGameWon}
+                    isGameWon={determineIfIsWon()}
                 />
                 <div className={styles.gridAndControlsContainer}>
                     <div className={styles.grid.default}>
@@ -196,7 +184,7 @@ export default function Game() {
                     <Controls
                         onResetGameClick={handleResetGameClick}
                         moveCount={moveCount}
-                        isGameWon={isGameWon}
+                        isGameWon={determineIfIsWon()}
                     />
                 </div>
             </div>
