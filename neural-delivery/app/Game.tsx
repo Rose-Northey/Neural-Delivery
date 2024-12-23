@@ -32,51 +32,46 @@ const allImages = [
     "/images/plant.jpg",
     "/images/duck.jpg",
     "/images/capybara.jpg",
-    "/images/.midnight.jpg",
-    "/images/.tomato.jpg",
-    "/images/.toothbrush.jpg",
-    "/images/.boredomjpg",
+    "/images/midnight.jpg",
+    "/images/tomato.jpg",
+    "/images/toothbrush.jpg",
+    "/images/boredom.jpg",
     "/images/alligator.jpg",
 ];
 
-function generateCards(difficulty: Difficulties): CardData[] {
-    const numberOfCardPairs = ImagePairsPerDifficulty[difficulty];
-    const images = shuffleItems<string>(allImages).slice(0, numberOfCardPairs);
-    let idCounter = 0;
-    const newStack: CardData[] = [];
-    images.forEach((image) => {
-        const cardData1 = {
-            image: image,
-            isMatched: false,
-            isSelected: false,
-            id: idCounter,
-        };
-        idCounter++;
-        const cardData2 = {
-            image: image,
-            isMatched: false,
-            isSelected: false,
-            id: idCounter,
-        };
-        idCounter++;
-        newStack.push(cardData1, cardData2);
-    });
-    return shuffleItems(newStack);
-}
-
 export default function Game() {
     const [cards, setCards] = useState<CardData[]>([]);
+    const [images, setImages] = useState<string[]>(allImages);
     const [moveCount, setMoveCount] = useState<number>(0);
     const [isGameWon, setIsGameWon] = useState<boolean>(false);
 
-    useEffect(() => {
-        setCards((prevCards) => shuffleCards(prevCards));
-    }, []);
-    useEffect(() => {
-        if (determineIfIsWon()) {
-            setIsGameWon(true);
-        }
-    }, cards);
+    function generateCards(difficulty: Difficulties): CardData[] {
+        const numberOfCardPairs = ImagePairsPerDifficulty[difficulty];
+        setImages((prevImages) => {
+            return shuffleItems<string>(prevImages);
+        });
+        const imagesInThisRound = images.slice(0, numberOfCardPairs);
+        let idCounter = 0;
+        const newStack: CardData[] = [];
+        imagesInThisRound.forEach((image) => {
+            const cardData1 = {
+                image: image,
+                isMatched: false,
+                isSelected: false,
+                id: idCounter,
+            };
+            idCounter++;
+            const cardData2 = {
+                image: image,
+                isMatched: false,
+                isSelected: false,
+                id: idCounter,
+            };
+            idCounter++;
+            newStack.push(cardData1, cardData2);
+        });
+        return shuffleItems(newStack);
+    }
 
     function markPreviousAndCurrentCardsAsMatched(matchedImage: string) {
         setCards((prevCards) =>
