@@ -4,16 +4,17 @@ import { GameState } from "./Game";
 
 type WinBannerProps = {
     onResetGameClick: () => void;
+    onReplayClick: () => void;
     moveCount: number;
     gameState: GameState;
 };
 
 export default function WinBanner({
     onResetGameClick,
+    onReplayClick,
     moveCount,
     gameState,
 }: WinBannerProps) {
-    function onReplayClick() {}
     return (
         <div
             className={

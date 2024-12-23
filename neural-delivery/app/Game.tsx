@@ -142,10 +142,14 @@ export default function Game() {
                 } else {
                     unselectAllCards();
                 }
-                setUserMoves((prev) => [...prev, currentCardId]);
+                if (gameState === GameState.inProgress) {
+                    setUserMoves((prev) => [...prev, currentCardId]);
+                }
             }, 1000);
         } else {
-            setUserMoves((prev) => [...prev, currentCardId]);
+            if (gameState === GameState.inProgress) {
+                setUserMoves((prev) => [...prev, currentCardId]);
+            }
         }
     }
 
@@ -180,7 +184,9 @@ export default function Game() {
         setGameState(GameState.difficultyNotSelected);
     };
 
-    const handleReplayClick = () => {};
+    const handleReplayClick = () => {
+        setGameState(GameState.isInReplay);
+    };
 
     return (
         <>
@@ -200,6 +206,7 @@ export default function Game() {
                 />
                 <WinBanner
                     onResetGameClick={handleResetGameClick}
+                    onReplayClick={handleReplayClick}
                     moveCount={Math.floor(userMoves.length / 2)}
                     gameState={gameState}
                 />
