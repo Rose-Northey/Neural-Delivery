@@ -41,6 +41,7 @@ export default function Game() {
     const [gameState, setGameState] = useState<GameState>(
         GameState.difficultyNotSelected
     );
+
     useEffect(() => {
         if (determineIfIsWon()) {
             setGameState(GameState.gameIsWon);
@@ -118,7 +119,6 @@ export default function Game() {
         currentCardId: number,
         currentCardImage: string
     ) {
-        setCardClickCount((prev) => prev + 1);
         const previouslySelectedCards = cards.filter(
             (card) => card.isSelected === true
         );
@@ -126,23 +126,31 @@ export default function Game() {
             return;
         }
         markCurrentCardAsSelected(currentCardId);
-
-        if (previouslySelectedCards.length > 0) {
-            setTimeout(() => {
-                if (previouslySelectedCards[0].image === currentCardImage) {
+        if (previouslySelectedCards.length === 1) {
+            if (previouslySelectedCards[0].image === currentCardImage) {
+                setTimeout(() => {
                     markPreviousAndCurrentCardsAsMatched(
                         previouslySelectedCards[0].image
                     );
-                } else {
+                    setCardClickCount((prev) => prev + 1);
+                }, 800);
+            } else {
+                setTimeout(() => {
                     unselectAllCards();
-                }
-            }, 1000);
+                    setCardClickCount((prev) => prev + 1);
+                }, 1000);
+            }
+        } else {
+            setCardClickCount((prev) => prev + 1);
         }
     }
+
     function handleResetGameClick() {
+        setCardClickCount(0);
+        setGameState(GameState.gameInProgress);
         unmatchAllCards();
+
         setTimeout(() => {
-            setCardClickCount(0);
             generateCards();
         }, 800);
     }

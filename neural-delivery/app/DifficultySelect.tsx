@@ -19,6 +19,9 @@ export default function DifficultySelect({
                     : styles.difficultySelected
             }
         >
+            <button onClick={() => onDifficultySelectionClick(4)}>
+                Easiest
+            </button>
             <button onClick={() => onDifficultySelectionClick(12)}>Easy</button>
             <button onClick={() => onDifficultySelectionClick(16)}>
                 Medium
