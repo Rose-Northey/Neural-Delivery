@@ -1,6 +1,6 @@
 import Controls from "./Controls";
 import { css, cx } from "@emotion/css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "./Card";
 import WinBanner from "./WinBanner";
 import { colors } from "./colors";
@@ -13,13 +13,6 @@ export type CardData = {
     isSelected: boolean;
     id: number;
 };
-
-enum ImagePairsPerDifficulty {
-    easy = 6,
-    medium = 8,
-    hard = 10,
-}
-type Difficulties = keyof typeof ImagePairsPerDifficulty;
 
 const allImages = [
     "/images/blackCat.jpg",
@@ -35,17 +28,24 @@ const allImages = [
     "/images/boredom.jpg",
     "/images/alligator.jpg",
 ];
+// use the number of cards to generate the next lot of cards
+// when difficulty is set, this sends the correct number of cards through on generate cards
 
 export default function Game() {
     const [cards, setCards] = useState<CardData[]>([]);
     const [moveCount, setMoveCount] = useState<number>(0);
     const [isGameWon, setIsGameWon] = useState<boolean>(false);
-    const [difficulty, setDifficulty] = useState<Difficulties | undefined>(
-        undefined
-    );
 
-    function generateCards(difficulty: Difficulties): CardData[] {
-        const numberOfCardPairs = ImagePairsPerDifficulty[difficulty];
+    useEffect(() => {
+        if (cards.length) {
+            if (determineIfIsWon()) {
+                setIsGameWon(true);
+            }
+        }
+    }, cards);
+
+    function generateCards(numberofCards = cards.length): CardData[] {
+        const numberOfCardPairs = numberofCards / 2;
         const imagesInThisRound = shuffleItems(allImages).slice(
             0,
             numberOfCardPairs
@@ -138,23 +138,24 @@ export default function Game() {
         }
     }
     function handleResetGameClick() {
-        if (difficulty) {
-            unmatchAllCards();
-            setIsGameWon(false);
-            setTimeout(() => {
-                setMoveCount(0);
-                setCards(generateCards(difficulty));
-            }, 800);
-        }
+        unmatchAllCards();
+        setIsGameWon(false);
+        setTimeout(() => {
+            setMoveCount(0);
+            setCards(generateCards());
+        }, 800);
     }
 
-    function onDifficultySelectionClick(inputDifficulty: Difficulties) {
-        setDifficulty(inputDifficulty);
-        if (difficulty) {
-            const newCards = generateCards(difficulty);
-            setCards(newCards);
-        }
+    function onDifficultySelectionClick(numberOfCards: number) {
+        const newCards = generateCards(numberOfCards);
+        setCards(newCards);
     }
+    const determineIfIsWon = () => {
+        if (cards) {
+            return cards.every((card) => card.isMatched);
+        }
+        return false;
+    };
 
     return (
         <>
