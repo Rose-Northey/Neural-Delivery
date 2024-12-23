@@ -41,16 +41,18 @@ const allImages = [
 
 export default function Game() {
     const [cards, setCards] = useState<CardData[]>([]);
-    const [images, setImages] = useState<string[]>(allImages);
     const [moveCount, setMoveCount] = useState<number>(0);
     const [isGameWon, setIsGameWon] = useState<boolean>(false);
+    const [difficulty, setDifficulty] = useState<Difficulties | undefined>(
+        undefined
+    );
 
     function generateCards(difficulty: Difficulties): CardData[] {
         const numberOfCardPairs = ImagePairsPerDifficulty[difficulty];
-        setImages((prevImages) => {
-            return shuffleItems<string>(prevImages);
-        });
-        const imagesInThisRound = images.slice(0, numberOfCardPairs);
+        const imagesInThisRound = shuffleItems(allImages).slice(
+            0,
+            numberOfCardPairs
+        );
         let idCounter = 0;
         const newStack: CardData[] = [];
         imagesInThisRound.forEach((image) => {
@@ -139,12 +141,14 @@ export default function Game() {
         }
     }
     function handleResetGameClick() {
-        unmatchAllCards();
-        setIsGameWon(false);
-        setTimeout(() => {
-            setMoveCount(0);
-            setCards(generateCards("easy"));
-        }, 800);
+        if (difficulty) {
+            unmatchAllCards();
+            setIsGameWon(false);
+            setTimeout(() => {
+                setMoveCount(0);
+                setCards(generateCards(difficulty));
+            }, 800);
+        }
     }
     const determineIfIsWon = () => cards.every((card) => card.isMatched);
 
