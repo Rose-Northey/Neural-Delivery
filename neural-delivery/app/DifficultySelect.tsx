@@ -1,15 +1,6 @@
-import shuffleItems from "./shuffleItems";
-import { CardData } from "./Game";
-
 type DifficultySelectProps = {
-    onDifficultySelectionClick: (difficulty: number) => void;
+    onDifficultySelectionClick: (numberOfCards: number) => void;
 };
-
-enum ImagePairsPerDifficulty {
-    easy = 6,
-    medium = 8,
-    hard = 10,
-}
 
 export default function DifficultySelect(props: DifficultySelectProps) {
     return (
@@ -26,10 +17,3 @@ export default function DifficultySelect(props: DifficultySelectProps) {
         </div>
     );
 }
-
-// difficulty is selected
-// number of cards is sent to game
-//
-
-// every time newGame is hit the images are randomized
-// every time

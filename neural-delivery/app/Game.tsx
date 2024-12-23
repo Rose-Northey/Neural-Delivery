@@ -1,6 +1,6 @@
 import Controls from "./Controls";
 import { css, cx } from "@emotion/css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Card from "./Card";
 import WinBanner from "./WinBanner";
 import { colors } from "./colors";
@@ -40,7 +40,7 @@ export default function Game() {
             numberOfCardPairs
         );
         let idCounter = 0;
-        const newStack: CardData[] = [];
+        const newCards: CardData[] = [];
         imagesInThisRound.forEach((image) => {
             const cardData1 = {
                 image: image,
@@ -56,9 +56,9 @@ export default function Game() {
                 id: idCounter,
             };
             idCounter++;
-            newStack.push(cardData1, cardData2);
+            newCards.push(cardData1, cardData2);
         });
-        return shuffleItems(newStack);
+        return shuffleItems(newCards);
     }
 
     function markPreviousAndCurrentCardsAsMatched(matchedImage: string) {
