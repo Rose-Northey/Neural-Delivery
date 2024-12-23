@@ -18,7 +18,7 @@ export default function Controls({
     return (
         <div
             className={
-                gameState === GameState.gameInProgress
+                gameState === GameState.inProgress
                     ? styles.gameInProgress
                     : styles.gameNotInProgress
             }

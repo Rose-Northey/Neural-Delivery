@@ -16,8 +16,9 @@ export type CardData = {
 
 export enum GameState {
     difficultyNotSelected,
-    gameInProgress,
-    gameIsWon,
+    inProgress,
+    isWon,
+    isInReplay,
 }
 
 const allImages = [
@@ -44,7 +45,7 @@ export default function Game() {
 
     useEffect(() => {
         if (determineIfIsWon()) {
-            setGameState(GameState.gameIsWon);
+            setGameState(GameState.isWon);
             console.log(userMoves);
         }
     }, [userMoves]);
@@ -123,7 +124,10 @@ export default function Game() {
         const previouslySelectedCards = cards.filter(
             (card) => card.isSelected === true
         );
-        if (previouslySelectedCards.length >= 2) {
+        if (
+            previouslySelectedCards.length >= 2 ||
+            gameState === GameState.isInReplay
+        ) {
             return;
         }
         markCurrentCardAsSelected(currentCardId);
@@ -147,7 +151,7 @@ export default function Game() {
 
     function handleResetGameClick() {
         setUserMoves([]);
-        setGameState(GameState.gameInProgress);
+        setGameState(GameState.inProgress);
         unmatchAllCards();
 
         setTimeout(() => {
@@ -156,7 +160,7 @@ export default function Game() {
     }
 
     function onDifficultySelectionClick(numberOfCards: number) {
-        setGameState(GameState.gameInProgress);
+        setGameState(GameState.inProgress);
         generateCards(numberOfCards);
     }
     const determineIfIsWon = () => {
@@ -175,6 +179,8 @@ export default function Game() {
         finishGamePrematurely();
         setGameState(GameState.difficultyNotSelected);
     };
+
+    const handleReplayClick = () => {};
 
     return (
         <>
@@ -266,7 +272,4 @@ const styles = {
     },
 };
 
-// record gameMoves
-// push game moves into an array - IDs
-// store these IDs in a state
 // offer the replay button when the user has won

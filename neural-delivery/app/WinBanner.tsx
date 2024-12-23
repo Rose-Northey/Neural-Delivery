@@ -1,4 +1,4 @@
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import { colors } from "./colors";
 import { GameState } from "./Game";
 
@@ -13,17 +13,30 @@ export default function WinBanner({
     moveCount,
     gameState,
 }: WinBannerProps) {
+    function onReplayClick() {}
     return (
         <div
             className={
-                gameState === GameState.gameIsWon
+                gameState === GameState.isWon
                     ? styles.gameWon
                     : styles.notWonYet
             }
         >
-            <button className={styles.newGameButton} onClick={onResetGameClick}>
-                New Game
-            </button>
+            <div className={styles.buttonContainer}>
+                <button
+                    className={cx(styles.newGameButton, styles.defaultButton)}
+                    onClick={onResetGameClick}
+                >
+                    New Game
+                </button>
+                <button
+                    className={cx(styles.replayButton, styles.defaultButton)}
+                    onClick={onReplayClick}
+                >
+                    Replay
+                </button>
+            </div>
+
             <div>
                 <div className={styles.winText}>YOU WIN!</div>
                 <div
@@ -35,17 +48,28 @@ export default function WinBanner({
 }
 
 const styles = {
-    newGameButton: css({
-        height: "12rem",
-        width: "16rem",
+    buttonContainer: css({
+        display: "flex",
+        flexDirection: "column",
+        maxWidth: "16rem",
         margin: "2rem",
-        fontSize: "3rem",
+        gap: "1rem",
+    }),
+    defaultButton: css({
+        width: "100%",
         padding: "2rem",
-        border: `5px solid ${colors.lightBlue}`,
-        backgroundColor: colors.lightBlue,
         "&&:hover": {
             backgroundColor: colors.orange,
         },
+    }),
+    newGameButton: css({
+        fontSize: "3rem",
+
+        border: `5px solid ${colors.lightBlue}`,
+        backgroundColor: colors.lightBlue,
+    }),
+    replayButton: css({
+        fontSize: "1rem",
     }),
     gameWon: css({
         width: "100%",
