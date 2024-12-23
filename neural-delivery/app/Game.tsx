@@ -22,6 +22,7 @@ enum ImagePairsPerDifficulty {
     medium = 8,
     hard = 10,
 }
+type Difficulties = keyof typeof ImagePairsPerDifficulty;
 
 const allImages = [
     "/images/blackCat.jpg",
@@ -45,7 +46,7 @@ function selectImagePairs(
     return shuffleItems<string>(allImages).slice(0, numberOfPairs);
 }
 
-function generateCards(difficulty: "easy" | "medium" | "hard"): CardData[] {
+function generateCards(difficulty: Difficulties): CardData[] {
     const images = selectImagePairs(difficulty);
     let idCounter = 0;
     const newStack: CardData[] = [];
@@ -226,9 +227,7 @@ export default function Game() {
     //     // function called "selectUnshuffledCards" which chooses which images are to be displayed randomly and also gives
     // };
 
-    function onDifficultySelectionClick(
-        difficulty: "easy" | "medium" | "hard"
-    ) {
+    function onDifficultySelectionClick(difficulty: Difficulties) {
         const newCards = generateCards(difficulty);
         setCards(newCards);
     }
@@ -321,3 +320,14 @@ const styles = {
         }),
     },
 };
+
+// FIRST GAME
+// #1 the difficulty is selected
+// #2 images for card pairs are selected
+// #3 cards are generated from the images
+// #4 cards are randomized
+
+// RESET GAME
+// #1 difficulty is the same as before
+// #2 new images are selected
+// #3
