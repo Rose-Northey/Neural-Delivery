@@ -39,15 +39,9 @@ const allImages = [
     "/images/alligator.jpg",
 ];
 
-function selectImagePairs(
-    difficulty: keyof typeof ImagePairsPerDifficulty
-): string[] {
-    const numberOfPairs = ImagePairsPerDifficulty[difficulty];
-    return shuffleItems<string>(allImages).slice(0, numberOfPairs);
-}
-
 function generateCards(difficulty: Difficulties): CardData[] {
-    const images = selectImagePairs(difficulty);
+    const numberOfCardPairs = ImagePairsPerDifficulty[difficulty];
+    const images = shuffleItems<string>(allImages).slice(0, numberOfCardPairs);
     let idCounter = 0;
     const newStack: CardData[] = [];
     images.forEach((image) => {
@@ -70,67 +64,7 @@ function generateCards(difficulty: Difficulties): CardData[] {
     return shuffleItems(newStack);
 }
 
-// function generateCards(cardImages: string[]): CardData[] {
-//     let idCounter = 0;
-//     const newStack: CardData[] = [];
-//     cardImages.forEach((image) => {
-//         const cardData1 = {
-//             image: image,
-//             isMatched: false,
-//             isSelected: false,
-//             id: idCounter,
-//         };
-//         idCounter++;
-//         const cardData2 = {
-//             image: image,
-//             isMatched: false,
-//             isSelected: false,
-//             id: idCounter,
-//         };
-//         idCounter++;
-//         newStack.push(cardData1, cardData2);
-//     });
-//     return newStack;
-// }
-
 export default function Game() {
-    const easyImages = [
-        "/images/blackCat.jpg",
-        "/images/horse.jpg",
-        "/images/box.jpg",
-        "/images/uke.jpg",
-        "/images/plant.jpg",
-        "/images/duck.jpg",
-        "/images/capybara.jpg",
-        "/images/.midnight.jpg",
-        "/images/.tomato.jpg",
-        "/images/.toothbrush.jpg",
-        "/images/.boredomjpg",
-        "/images/alligator.jpg",
-    ];
-    const mediumImages = [
-        "/images/blackCat.jpg",
-        "/images/horse.jpg",
-        "/images/box.jpg",
-        "/images/uke.jpg",
-        "/images/plant.jpg",
-        "/images/duck.jpg",
-        "/images/plant.jpg",
-        "/images/duck.jpg",
-    ];
-    const hardImages = [
-        "/images/blackCat.jpg",
-        "/images/horse.jpg",
-        "/images/box.jpg",
-        "/images/uke.jpg",
-        "/images/plant.jpg",
-        "/images/duck.jpg",
-        "/images/box.jpg",
-        "/images/uke.jpg",
-        "/images/plant.jpg",
-        "/images/duck.jpg",
-    ];
-    const [images, setImages] = useState();
     const [cards, setCards] = useState<CardData[]>([]);
     const [moveCount, setMoveCount] = useState<number>(0);
     const [isGameWon, setIsGameWon] = useState<boolean>(false);
@@ -219,14 +153,6 @@ export default function Game() {
     }
     const determineIfIsWon = () => cards.every((card) => card.isMatched);
 
-    // const onDifficultySelectionClick = (difficulty:) => {
-    //     //when difficulty is selected, there shouldn't be any images already selected (should be an empty array)
-    //     // in the DifficultySelect component generateCards is run ->
-    //     //    - inputs: number of images
-    //     //      it uses the number of images to randomly select which images are to be used
-    //     // function called "selectUnshuffledCards" which chooses which images are to be displayed randomly and also gives
-    // };
-
     function onDifficultySelectionClick(difficulty: Difficulties) {
         const newCards = generateCards(difficulty);
         setCards(newCards);
@@ -235,7 +161,6 @@ export default function Game() {
     return (
         <>
             <DifficultySelect
-                areCardImagesSelected={Boolean(images)}
                 onDifficultySelectionClick={onDifficultySelectionClick}
             />
             <div

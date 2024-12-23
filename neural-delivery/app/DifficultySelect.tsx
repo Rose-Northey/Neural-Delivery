@@ -2,7 +2,6 @@ import shuffleItems from "./shuffleItems";
 import { CardData } from "./Game";
 
 type DifficultySelectProps = {
-    areCardImagesSelected: boolean;
     onDifficultySelectionClick: (
         difficulty: "easy" | "medium" | "hard"
     ) => void;
@@ -14,8 +13,12 @@ export default function DifficultySelect(props: DifficultySelectProps) {
             <button onClick={() => props.onDifficultySelectionClick("easy")}>
                 Easy
             </button>
-            <button>Medium</button>
-            <button>Hard</button>
+            <button onClick={() => props.onDifficultySelectionClick("medium")}>
+                Medium
+            </button>
+            <button onClick={() => props.onDifficultySelectionClick("hard")}>
+                Hard
+            </button>
         </div>
     );
 }
