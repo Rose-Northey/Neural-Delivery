@@ -143,7 +143,7 @@ export default function Game() {
         setIsGameWon(false);
         setTimeout(() => {
             setMoveCount(0);
-            setCards((prev) => shuffleCards(prev));
+            setCards(generateCards("easy"));
         }, 800);
     }
     const determineIfIsWon = () => cards.every((card) => card.isMatched);
