@@ -1,33 +1,43 @@
 import { css } from "@emotion/css";
 import { colors } from "./colors";
+import { GameState } from "./Game";
 
 type ControlsProps = {
+    onChangeDifficultyClick: () => void;
     onResetGameClick: () => void;
     moveCount: number;
-    isGameWon: boolean;
+    gameState: GameState;
 };
 
 export default function Controls({
+    onChangeDifficultyClick,
     onResetGameClick,
     moveCount,
-    isGameWon,
+    gameState,
 }: ControlsProps) {
     return (
-        <div className={isGameWon ? styles.winState : styles.controlsContainer}>
+        <div
+            className={
+                gameState === GameState.gameInProgress
+                    ? styles.gameInProgress
+                    : styles.gameNotInProgress
+            }
+        >
             <div className={styles.moveCountContainer}>
                 MoveCount:
                 <div className={styles.countContainer}>{moveCount}</div>
             </div>
             <button onClick={onResetGameClick}>New Game</button>
+            <button onClick={onChangeDifficultyClick}>Change Difficulty</button>
         </div>
     );
 }
 
 const styles = {
-    winState: css({
-        visibility: "hidden",
+    gameNotInProgress: css({
+        display: "none",
     }),
-    controlsContainer: css({
+    gameInProgress: css({
         display: "flex",
         flexDirection: "column",
         backgroundColor: colors.lightBlue,

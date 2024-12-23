@@ -1,6 +1,6 @@
 import Controls from "./Controls";
 import { css, cx } from "@emotion/css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "./Card";
 import WinBanner from "./WinBanner";
 import { colors } from "./colors";
@@ -13,6 +13,12 @@ export type CardData = {
     isSelected: boolean;
     id: number;
 };
+
+export enum GameState {
+    difficultyNotSelected,
+    gameInProgress,
+    gameIsWon,
+}
 
 const allImages = [
     "/images/blackCat.jpg",
@@ -31,9 +37,17 @@ const allImages = [
 
 export default function Game() {
     const [cards, setCards] = useState<CardData[]>([]);
-    const [moveCount, setMoveCount] = useState<number>(0);
+    const [cardClickCount, setCardClickCount] = useState<number>(0);
+    const [gameState, setGameState] = useState<GameState>(
+        GameState.difficultyNotSelected
+    );
+    useEffect(() => {
+        if (determineIfIsWon()) {
+            setGameState(GameState.gameIsWon);
+        }
+    }, [cardClickCount]);
 
-    function generateCards(numberofCards = cards.length): CardData[] {
+    function generateCards(numberofCards = cards.length) {
         const numberOfCardPairs = numberofCards / 2;
         const imagesInThisRound = shuffleItems(allImages).slice(
             0,
@@ -58,7 +72,7 @@ export default function Game() {
             idCounter++;
             newCards.push(cardData1, cardData2);
         });
-        return shuffleItems(newCards);
+        setCards(shuffleItems(newCards));
     }
 
     function markPreviousAndCurrentCardsAsMatched(matchedImage: string) {
@@ -104,6 +118,7 @@ export default function Game() {
         currentCardId: number,
         currentCardImage: string
     ) {
+        setCardClickCount((prev) => prev + 1);
         const previouslySelectedCards = cards.filter(
             (card) => card.isSelected === true
         );
@@ -112,9 +127,7 @@ export default function Game() {
         }
         markCurrentCardAsSelected(currentCardId);
 
-        if (previouslySelectedCards.length === 0) {
-            setMoveCount((prev) => prev + 1);
-        } else {
+        if (previouslySelectedCards.length > 0) {
             setTimeout(() => {
                 if (previouslySelectedCards[0].image === currentCardImage) {
                     markPreviousAndCurrentCardsAsMatched(
@@ -129,14 +142,14 @@ export default function Game() {
     function handleResetGameClick() {
         unmatchAllCards();
         setTimeout(() => {
-            setMoveCount(0);
-            setCards(generateCards());
+            setCardClickCount(0);
+            generateCards();
         }, 800);
     }
 
     function onDifficultySelectionClick(numberOfCards: number) {
-        const newCards = generateCards(numberOfCards);
-        setCards(newCards);
+        setGameState(GameState.gameInProgress);
+        generateCards(numberOfCards);
     }
     const determineIfIsWon = () => {
         if (cards.length) {
@@ -145,11 +158,18 @@ export default function Game() {
         return false;
     };
 
+    const finishGamePrematurely = () => {
+        setCardClickCount(0);
+        setCards([]);
+    };
+
+    const handleChangeDifficultyClick = () => {
+        finishGamePrematurely();
+        setGameState(GameState.difficultyNotSelected);
+    };
+
     return (
         <>
-            <DifficultySelect
-                onDifficultySelectionClick={onDifficultySelectionClick}
-            />
             <div
                 className={
                     determineIfIsWon()
@@ -160,10 +180,14 @@ export default function Game() {
                         : styles.gameContainer.default
                 }
             >
+                <DifficultySelect
+                    onDifficultySelectionClick={onDifficultySelectionClick}
+                    gameState={gameState}
+                />
                 <WinBanner
                     onResetGameClick={handleResetGameClick}
-                    moveCount={moveCount}
-                    isGameWon={determineIfIsWon()}
+                    moveCount={Math.floor(cardClickCount / 2)}
+                    gameState={gameState}
                 />
                 <div className={styles.gridAndControlsContainer}>
                     <div className={styles.grid.default}>
@@ -182,9 +206,10 @@ export default function Game() {
                     </div>
 
                     <Controls
+                        onChangeDifficultyClick={handleChangeDifficultyClick}
                         onResetGameClick={handleResetGameClick}
-                        moveCount={moveCount}
-                        isGameWon={determineIfIsWon()}
+                        moveCount={Math.floor(cardClickCount / 2)}
+                        gameState={gameState}
                     />
                 </div>
             </div>
@@ -232,14 +257,3 @@ const styles = {
         }),
     },
 };
-
-// FIRST GAME
-// #1 the difficulty is selected
-// #2 images for card pairs are selected
-// #3 cards are generated from the images
-// #4 cards are randomized
-
-// RESET GAME
-// #1 difficulty is the same as before
-// #2 new images are selected
-// #3

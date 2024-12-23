@@ -1,19 +1,26 @@
 import { css } from "@emotion/css";
 import { colors } from "./colors";
+import { GameState } from "./Game";
 
 type WinBannerProps = {
     onResetGameClick: () => void;
     moveCount: number;
-    isGameWon: boolean;
+    gameState: GameState;
 };
 
 export default function WinBanner({
     onResetGameClick,
     moveCount,
-    isGameWon,
+    gameState,
 }: WinBannerProps) {
     return (
-        <div className={isGameWon ? styles.gameWon : styles.notWonYet}>
+        <div
+            className={
+                gameState === GameState.gameIsWon
+                    ? styles.gameWon
+                    : styles.notWonYet
+            }
+        >
             <button className={styles.newGameButton} onClick={onResetGameClick}>
                 New Game
             </button>
