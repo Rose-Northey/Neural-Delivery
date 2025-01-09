@@ -6,7 +6,7 @@ type DifficultySelectProps = {
     gameState: GameState;
     onDifficultySelectionClick: (numberOfCards: number) => void;
 };
-// only display if
+
 export default function DifficultySelect({
     gameState,
     onDifficultySelectionClick,

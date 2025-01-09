@@ -42,6 +42,7 @@ export default function Game() {
         GameState.difficultyNotSelected
     );
     const [userMoves, setUserMoves] = useState<number[]>([]);
+    const [replayIndex, setReplayIndex] = useState<number | undefined>();
 
     useEffect(() => {
         if (determineIfIsWon()) {
@@ -49,6 +50,16 @@ export default function Game() {
             console.log(userMoves);
         }
     }, [userMoves]);
+
+    useEffect(() => {
+        if (replayIndex) {
+            if (replayIndex < userMoves.length) {
+                handleUnknownCardClick(userMoves[replayIndex]);
+            } else {
+                setGameState(GameState.isWon);
+            }
+        }
+    }, [replayIndex]);
 
     function generateCards(numberofCards = cards.length) {
         const numberOfCardPairs = numberofCards / 2;
@@ -117,25 +128,23 @@ export default function Game() {
         );
     }
 
-    function handleUnknownCardClick(
-        currentCardId: number,
-        currentCardImage: string
-    ) {
+    function handleUnknownCardClick(currentCardId: number) {
+        const currentSelectedImage = cards.find(
+            (card) => card.id === currentCardId
+        )?.image;
         const previouslySelectedCards = cards.filter(
             (card) => card.isSelected === true
         );
-        if (
-            previouslySelectedCards.length >= 2 ||
-            gameState === GameState.isInReplay
-        ) {
+        if (previouslySelectedCards.length >= 2) {
             return;
         }
+
         markCurrentCardAsSelected(currentCardId);
 
         if (previouslySelectedCards.length === 1) {
             setTimeout(() => {
                 // allow user to see selected state before match or unselect
-                if (previouslySelectedCards[0].image === currentCardImage) {
+                if (previouslySelectedCards[0].image === currentSelectedImage) {
                     markPreviousAndCurrentCardsAsMatched(
                         previouslySelectedCards[0].image
                     );
@@ -145,10 +154,16 @@ export default function Game() {
                 if (gameState === GameState.inProgress) {
                     setUserMoves((prev) => [...prev, currentCardId]);
                 }
+                if (gameState === GameState.isInReplay) {
+                    setReplayIndex((prev) => prev ?? 0 + 1);
+                }
             }, 1000);
         } else {
             if (gameState === GameState.inProgress) {
                 setUserMoves((prev) => [...prev, currentCardId]);
+            }
+            if (gameState === GameState.isInReplay) {
+                setReplayIndex((prev) => prev ?? 0 + 1);
             }
         }
     }
@@ -186,6 +201,8 @@ export default function Game() {
 
     const handleReplayClick = () => {
         setGameState(GameState.isInReplay);
+        unmatchAllCards();
+        setReplayIndex(0);
     };
 
     return (
