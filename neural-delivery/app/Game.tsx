@@ -38,12 +38,15 @@ const allImages = [
 
 export default function Game() {
     const [cards, setCards] = useState<CardData[]>([]);
+    //gamestate is updated for 4 different states
     const [gameState, setGameState] = useState<GameState>(
         GameState.difficultyNotSelected
     );
+    //userMoves records an array of different usermoves each move corresponding to the card which has been clicked
     const [userMoves, setUserMoves] = useState<number[]>([]);
     const [replayIndex, setReplayIndex] = useState<number | undefined>();
 
+    //every time a usermove is added to the array, the code checks whether there is a win
     useEffect(() => {
         if (determineIfIsWon()) {
             setGameState(GameState.isWon);
@@ -51,15 +54,20 @@ export default function Game() {
         }
     }, [userMoves]);
 
+    // every time the replay index increases, the code simmulates a cardclick
     useEffect(() => {
-        if (replayIndex) {
-            if (replayIndex < userMoves.length) {
-                handleUnknownCardClick(userMoves[replayIndex]);
-            } else {
-                setGameState(GameState.isWon);
-            }
+        if (typeof replayIndex === "number" && replayIndex < userMoves.length) {
+            handleUnknownCardClick(userMoves[replayIndex]);
+            setReplayIndex((prev) => prev! + 1);
         }
     }, [replayIndex]);
+
+    // TODO
+    async function animateCards(newCardState: CardData[]) {
+        //one card is flipped and then nothing
+        //second card is flipped and then wait and then both flipped back
+        //second card is flipped and then wait and then both matched
+    }
 
     function generateCards(numberofCards = cards.length) {
         const numberOfCardPairs = numberofCards / 2;
@@ -128,7 +136,15 @@ export default function Game() {
         );
     }
 
-    function handleUnknownCardClick(currentCardId: number) {
+    function animateCards(ms: number) {
+        new Promise((resolve, reject) => {
+            // Asynchronous code goes here
+            // If the operation succeeds, call resolve with a result
+            // If the operation fails, call reject with an error
+        });
+    }
+
+    async function handleUnknownCardClick(currentCardId: number) {
         const currentSelectedImage = cards.find(
             (card) => card.id === currentCardId
         )?.image;
