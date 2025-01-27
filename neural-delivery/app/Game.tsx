@@ -43,7 +43,7 @@ export default function Game() {
         GameState.difficultyNotSelected
     );
     const [userMoves, setUserMoves] = useState<number[]>([]);
-    const [replayIndex, setReplayIndex] = useState<number>(0);
+    const [replayIndex, setReplayIndex] = useState<number>(-1);
 
     async function pause(milliseconds: number): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -65,14 +65,17 @@ export default function Game() {
 
     useEffect(() => {
         async function simulateUserClick() {
-            await handleUnknownCardClick(userMoves[replayIndex]);
+            if (gameState === GameState.isInReplay) {
+                await handleUnknownCardClick(userMoves[replayIndex]);
+
+                if (replayIndex < userMoves.length) {
+                    setReplayIndex((prev) => prev + 1);
+                } else if (replayIndex === userMoves.length) {
+                    setGameState(GameState.isWon);
+                }
+            }
         }
-        if (replayIndex < userMoves.length) {
-            simulateUserClick();
-            setReplayIndex((prev) => prev + 1);
-        } else if (replayIndex === userMoves.length) {
-            setGameState(GameState.isWon);
-        }
+        simulateUserClick();
     }, [replayIndex]);
 
     function generateCards(numberofCards = cards.length) {
@@ -144,49 +147,45 @@ export default function Game() {
         );
     }
 
-    async function handleUnknownCardClick(
-        currentCardId: number
-    ): Promise<void> {
-        return new Promise<void>(async (resolve, reject) => {
-            const currentSelectedImage = cards.find(
-                (card) => card.id === currentCardId
-            )?.image;
-            const previouslySelectedCards = cards.filter(
-                (card) => card.isSelected === true
-            );
-            if (previouslySelectedCards.length >= 2) {
-                return;
-            }
+    async function handleUnknownCardClick(currentCardId: number) {
+        const currentSelectedImage = cards.find(
+            (card) => card.id === currentCardId
+        )?.image;
+        const previouslySelectedCards = cards.filter(
+            (card) => card.isSelected === true
+        );
+        if (previouslySelectedCards.length >= 2) {
+            return;
+        }
 
-            if (previouslySelectedCards.length === 1) {
-                markCurrentCardAsSelected(currentCardId);
-                await pause(800);
+        if (previouslySelectedCards.length === 1) {
+            markCurrentCardAsSelected(currentCardId);
+            await pause(600);
 
-                if (previouslySelectedCards[0].image === currentSelectedImage) {
+            if (previouslySelectedCards[0].image === currentSelectedImage) {
+                await pause(300);
+                markPreviousAndCurrentCardsAsMatched(
+                    previouslySelectedCards[0].image
+                );
+                if (gameState === GameState.isInReplay) {
                     await pause(200);
-                    markPreviousAndCurrentCardsAsMatched(
-                        previouslySelectedCards[0].image
-                    );
-                    if (gameState === GameState.isInReplay) {
-                        await pause(800);
-                    }
-                } else {
-                    unselectAllCards();
-                    await pause(800);
-                }
-
-                if (gameState === GameState.inProgress) {
-                    setUserMoves((prev) => [...prev, currentCardId]);
                 }
             } else {
-                markCurrentCardAsSelected(currentCardId);
+                await pause(300);
+                unselectAllCards();
                 await pause(800);
-                if (gameState === GameState.inProgress) {
-                    setUserMoves((prev) => [...prev, currentCardId]);
-                }
             }
-            resolve();
-        });
+
+            if (gameState === GameState.inProgress) {
+                setUserMoves((prev) => [...prev, currentCardId]);
+            }
+        } else {
+            markCurrentCardAsSelected(currentCardId);
+            await pause(600);
+            if (gameState === GameState.inProgress) {
+                setUserMoves((prev) => [...prev, currentCardId]);
+            }
+        }
     }
 
     async function handleResetGameClick() {
@@ -222,17 +221,15 @@ export default function Game() {
         setGameState(GameState.isInReplay);
         unmatchAllCards();
         await pause(800);
-        for (let i = 0; i < userMoves.length; i++) {
-            await handleUnknownCardClick(userMoves[i]);
-        }
-        setGameState(GameState.isWon);
+        setReplayIndex(0);
     };
 
     return (
         <>
             <div
                 className={
-                    determineIfIsWon()
+                    gameState === GameState.isWon ||
+                    gameState === GameState.isInReplay
                         ? cx(
                               styles.gameContainer.winState,
                               styles.gameContainer.default
@@ -261,6 +258,9 @@ export default function Game() {
                                     image={cardData.image}
                                     isSelected={cardData.isSelected}
                                     isMatched={cardData.isMatched}
+                                    isInReplayMode={
+                                        gameState === GameState.isInReplay
+                                    }
                                 />
                             );
                         })}

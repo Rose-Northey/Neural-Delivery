@@ -7,6 +7,7 @@ interface NewCardProps {
     onUnknownCardClick: (cardId: number, image: string) => void;
     isSelected: boolean;
     isMatched: boolean;
+    isInReplayMode: boolean;
 }
 
 export default function Card({
@@ -15,6 +16,7 @@ export default function Card({
     onUnknownCardClick,
     isSelected,
     isMatched,
+    isInReplayMode,
 }: NewCardProps) {
     return (
         <>
@@ -29,7 +31,7 @@ export default function Card({
                 >
                     <img
                         onClick={() =>
-                            isSelected || isMatched
+                            isSelected || isMatched || isInReplayMode
                                 ? null
                                 : onUnknownCardClick(id, image)
                         }
