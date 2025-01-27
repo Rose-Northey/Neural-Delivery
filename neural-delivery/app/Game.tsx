@@ -6,6 +6,7 @@ import WinBanner from "./WinBanner";
 import { colors } from "./colors";
 import DifficultySelect from "./DifficultySelect";
 import shuffleItems from "./shuffleItems";
+import { setRequestMeta } from "next/dist/server/request-meta";
 
 export type CardData = {
     image: string;
@@ -42,7 +43,7 @@ export default function Game() {
         GameState.difficultyNotSelected
     );
     const [userMoves, setUserMoves] = useState<number[]>([]);
-    const [replayIndex, setReplayIndex] = useState<number | undefined>();
+    const [replayIndex, setReplayIndex] = useState<number>(0);
 
     async function pause(milliseconds: number): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -53,30 +54,26 @@ export default function Game() {
     }
 
     useEffect(() => {
-        if (gameState === GameState.inProgress && determineIfIsWon()) {
-            setGameState(GameState.isWon);
+        async function winSequence() {
+            if (gameState === GameState.inProgress && determineIfIsWon()) {
+                await pause(500);
+                setGameState(GameState.isWon);
+            }
         }
+        winSequence();
     }, [userMoves]);
 
     useEffect(() => {
         async function simulateUserClick() {
-            if (
-                typeof replayIndex === "number" &&
-                replayIndex < userMoves.length
-            ) {
-                if (replayIndex === 0) {
-                    await pause(1000);
-                }
-                await handleUnknownCardClick(userMoves[replayIndex]);
-                if (replayIndex % 2 != 0) {
-                    await pause(1000);
-                }
-                setReplayIndex((prev) => prev! + 1);
-            }
+            await handleUnknownCardClick(userMoves[replayIndex]);
         }
-        simulateUserClick();
+        if (replayIndex < userMoves.length) {
+            simulateUserClick();
+            setReplayIndex((prev) => prev + 1);
+        } else if (replayIndex === userMoves.length) {
+            setGameState(GameState.isWon);
+        }
     }, [replayIndex]);
-    // maybe look into useQuery or something???
 
     function generateCards(numberofCards = cards.length) {
         const numberOfCardPairs = numberofCards / 2;
@@ -128,18 +125,14 @@ export default function Game() {
         );
     }
 
-    async function unmatchAllCards(): Promise<void> {
+    function unmatchAllCards() {
         setCards((prevCards) =>
             prevCards.map((card) => {
                 return { ...card, isMatched: false };
             })
         );
-        return new Promise<void>((resolve, reject) => {
-            setTimeout(() => {
-                resolve();
-            }, 800);
-        });
     }
+
     function unselectAllCards() {
         setCards((prevCards) =>
             prevCards.map((card) => {
@@ -151,51 +144,56 @@ export default function Game() {
         );
     }
 
-    async function handleUnknownCardClick(currentCardId: number) {
-        const currentSelectedImage = cards.find(
-            (card) => card.id === currentCardId
-        )?.image;
-        const previouslySelectedCards = cards.filter(
-            (card) => card.isSelected === true
-        );
-        if (previouslySelectedCards.length >= 2) {
-            return;
-        }
+    async function handleUnknownCardClick(
+        currentCardId: number
+    ): Promise<void> {
+        return new Promise<void>(async (resolve, reject) => {
+            const currentSelectedImage = cards.find(
+                (card) => card.id === currentCardId
+            )?.image;
+            const previouslySelectedCards = cards.filter(
+                (card) => card.isSelected === true
+            );
+            if (previouslySelectedCards.length >= 2) {
+                return;
+            }
 
-        if (previouslySelectedCards.length === 1) {
-            markCurrentCardAsSelected(currentCardId);
-            await pause(1000);
+            if (previouslySelectedCards.length === 1) {
+                markCurrentCardAsSelected(currentCardId);
+                await pause(800);
 
-            if (previouslySelectedCards[0].image === currentSelectedImage) {
-                markPreviousAndCurrentCardsAsMatched(
-                    previouslySelectedCards[0].image
-                );
+                if (previouslySelectedCards[0].image === currentSelectedImage) {
+                    await pause(200);
+                    markPreviousAndCurrentCardsAsMatched(
+                        previouslySelectedCards[0].image
+                    );
+                    if (gameState === GameState.isInReplay) {
+                        await pause(800);
+                    }
+                } else {
+                    unselectAllCards();
+                    await pause(800);
+                }
+
+                if (gameState === GameState.inProgress) {
+                    setUserMoves((prev) => [...prev, currentCardId]);
+                }
             } else {
-                unselectAllCards();
+                markCurrentCardAsSelected(currentCardId);
+                await pause(800);
+                if (gameState === GameState.inProgress) {
+                    setUserMoves((prev) => [...prev, currentCardId]);
+                }
             }
-
-            if (gameState === GameState.inProgress) {
-                setUserMoves((prev) => [...prev, currentCardId]);
-            }
-            if (gameState === GameState.isInReplay) {
-                setReplayIndex((prev) => prev ?? 0 + 1);
-            }
-        } else {
-            markCurrentCardAsSelected(currentCardId);
-            await pause(300);
-            if (gameState === GameState.inProgress) {
-                setUserMoves((prev) => [...prev, currentCardId]);
-            }
-            if (gameState === GameState.isInReplay) {
-                setReplayIndex((prev) => prev ?? 0 + 1);
-            }
-        }
+            resolve();
+        });
     }
 
     async function handleResetGameClick() {
         setUserMoves([]);
         setGameState(GameState.inProgress);
-        await unmatchAllCards();
+        unmatchAllCards();
+        await pause(800);
         generateCards();
     }
 
@@ -220,10 +218,14 @@ export default function Game() {
         setGameState(GameState.difficultyNotSelected);
     };
 
-    const handleReplayClick = () => {
+    const handleReplayClick = async () => {
         setGameState(GameState.isInReplay);
         unmatchAllCards();
-        setReplayIndex(0);
+        await pause(800);
+        for (let i = 0; i < userMoves.length; i++) {
+            await handleUnknownCardClick(userMoves[i]);
+        }
+        setGameState(GameState.isWon);
     };
 
     return (
@@ -286,6 +288,7 @@ const styles = {
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: colors.midBlue,
+            transition: "background-color 0.5s ease",
         }),
         winState: css({
             "&&": {
@@ -316,5 +319,3 @@ const styles = {
         }),
     },
 };
-
-// offer the replay button when the user has won
