@@ -51,3 +51,5 @@ The Carrier Science Committee loves the prototype but has additional requirement
 -> recording the moves next week -> client side recorded and then sent to server
 -> replaying function
 type of server (asp net core project) (c# dabbling)
+
+https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-9.0&tabs=visual-studio

@@ -18,14 +18,15 @@ export default function Card({
     isMatched,
     isInReplayMode,
 }: NewCardProps) {
+    const cardStyling = style(isInReplayMode);
     return (
         <>
-            <div className={style.outerContainer.default}>
+            <div className={cardStyling.outerContainer.default}>
                 <div
                     className={cx(
-                        style.innerContainer.default,
+                        cardStyling.innerContainer.default,
                         isMatched || isSelected
-                            ? style.innerContainer.isFlipped
+                            ? cardStyling.innerContainer.isFlipped
                             : ""
                     )}
                 >
@@ -35,17 +36,17 @@ export default function Card({
                                 ? null
                                 : onUnknownCardClick(id, image)
                         }
-                        className={style.frontOfCard.default}
+                        className={cardStyling.frontOfCard.default}
                         src="/images/unknown.jpg"
                     />
 
                     <img
                         className={
                             isMatched
-                                ? style.backOfCard.default
+                                ? cardStyling.backOfCard.default
                                 : cx(
-                                      style.backOfCard.default,
-                                      style.backOfCard.isSelected
+                                      cardStyling.backOfCard.default,
+                                      cardStyling.backOfCard.isSelected
                                   )
                         }
                         src={image}
@@ -56,46 +57,50 @@ export default function Card({
     );
 }
 
-const style = {
-    outerContainer: {
-        default: css({
-            width: "150px",
-            aspectRatio: "1",
-            perspective: "1000px",
-        }),
-    },
-    innerContainer: {
-        default: css({
-            width: "100%",
-            aspectRatio: "1",
-            position: "relative",
-            transition: "transform 0.8s",
-            transformStyle: "preserve-3d",
-            "&>img": {
-                position: "absolute",
+const style = (isInReplayMode: boolean) => {
+    return {
+        outerContainer: {
+            default: css({
+                width: "150px",
+                aspectRatio: "1",
+                perspective: "1000px",
+            }),
+        },
+        innerContainer: {
+            default: css({
                 width: "100%",
                 aspectRatio: "1",
-            },
-        }),
-        isFlipped: css({
-            transform: "rotateY(180deg)",
-        }),
-    },
-    frontOfCard: {
-        default: css({
-            boxShadow: "0 0 0 2px #0066b2",
-            zIndex: "2",
-            "&:hover": { boxShadow: "0 0 0 2px #7d90a1" },
-            backfaceVisibility: "hidden",
-        }),
-    },
-    backOfCard: {
-        default: css({
-            transform: "rotateY(180deg)",
-        }),
-        isSelected: css({
-            opacity: "75%",
-            boxShadow: "0 0 0 2px #FEBE10",
-        }),
-    },
+                position: "relative",
+                transition: "transform 0.8s",
+                transformStyle: "preserve-3d",
+                "&>img": {
+                    position: "absolute",
+                    width: "100%",
+                    aspectRatio: "1",
+                },
+            }),
+            isFlipped: css({
+                transform: "rotateY(180deg)",
+            }),
+        },
+        frontOfCard: {
+            default: css({
+                boxShadow: "0 0 0 2px #0066b2",
+                zIndex: "2",
+                "&:hover": {
+                    boxShadow: isInReplayMode ? "none" : "0 0 0 2px #7d90a1",
+                },
+                backfaceVisibility: "hidden",
+            }),
+        },
+        backOfCard: {
+            default: css({
+                transform: "rotateY(180deg)",
+            }),
+            isSelected: css({
+                opacity: "75%",
+                boxShadow: "0 0 0 2px #FEBE10",
+            }),
+        },
+    };
 };
