@@ -1,12 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace MemoryApi.Models;
-
-public class ModelContext: DbContext
+namespace MemoryApi.Models
 {
-    public MemoryContext(DbContextOptions<MemoryContext> options)
-    :base(options)
-    }
+    public class MemoryContext : DbContext
     {
-        public DbSet<MemoryItem>MemoryItems{get;set;}=null;
+    public MemoryContext(DbContextOptions<MemoryContext> options)
+        :base(options)
+    {
+    }
+        public DbSet<MemoryItem> MemoryItems { get; set; } = null!;
+    }
 }
+// using Microsoft.EntityFrameworkCore;
+
+// namespace MemoryApi.Models
+// {
+//     public class MemoryContext : DbContext
+//     {
+//         public MemoryContext(DbContextOptions<MemoryContext> options)
+//             : base(options)
+//         {
+//         }
+
+//         public DbSet<MemoryItem> MemoryItems { get; set; } = null!;
+//     }
+// }
