@@ -3,12 +3,13 @@ using MemoryApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Policy1",
+    options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000");
+            policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
         });
 });
 
@@ -34,6 +35,7 @@ app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseRouting();  
 	
 app.UseCors();
 

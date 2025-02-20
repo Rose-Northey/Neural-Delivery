@@ -2,7 +2,7 @@ export async function getMemoryItems() {
     const url = "http://localhost:5237/api/MemoryItems";
 
     try {
-        const response = await fetch(url, { mode: "no-cors" });
+        const response = await fetch(url);
         if (!response.ok) {
             console.error(`Error: ${response.status} ${response.statusText}`);
             throw new Error(`uh oh`);

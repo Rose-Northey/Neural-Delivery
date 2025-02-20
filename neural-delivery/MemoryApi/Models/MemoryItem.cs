@@ -5,7 +5,6 @@ public class MemoryItem
     public long Id{get;set;}
     public required string Difficulty{get;set;}
     public required List<int> UserMoves{get;set;}
-    public string? Secret { get; set; }
 }
 
 // required means it must be set during initisation otherwise it will throw an error

@@ -17,7 +17,6 @@ public class MemoryItemsController : ControllerBase
     }
 
     // GET: api/MemoryItems
-    [EnableCors("Policy1")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemoryItemDTO>>> GetMemoryItems()
     {
@@ -81,19 +80,19 @@ public class MemoryItemsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<MemoryItemDTO>> PostMemoryItem(MemoryItemDTO memoryDTO)
     {
-        var MemoryItem = new MemoryItem
+        var memoryItem = new MemoryItem
         {
             Difficulty = memoryDTO.Difficulty,
             UserMoves = memoryDTO.UserMoves
         };
 
-        _context.MemoryItems.Add(MemoryItem);
+        _context.MemoryItems.Add(memoryItem);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(
             nameof(GetMemoryItem),
-            new { id = MemoryItem.Id },
-            ItemToDTO(MemoryItem));
+            new { id = memoryItem.Id },
+            ItemToDTO(memoryItem));
     }
     // </snippet_Create>
 
