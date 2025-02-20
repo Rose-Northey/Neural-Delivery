@@ -13,6 +13,7 @@
         "packagesPath": "/Users/rosenorthey/.nuget/packages/",
         "outputPath": "/Users/rosenorthey/dev/Neural-Delivery/neural-delivery/MemoryApi/obj/",
         "projectStyle": "PackageReference",
+        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
           "/Users/rosenorthey/.nuget/NuGet/NuGet.Config"
         ],

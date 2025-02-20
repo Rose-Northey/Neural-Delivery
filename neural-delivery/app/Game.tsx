@@ -6,7 +6,7 @@ import WinBanner from "./WinBanner";
 import { colors } from "./colors";
 import DifficultySelect from "./DifficultySelect";
 import shuffleItems from "./shuffleItems";
-import { setRequestMeta } from "next/dist/server/request-meta";
+import { getMemoryItems } from "./apiFunctions";
 
 export type CardData = {
     image: string;
@@ -38,6 +38,7 @@ const allImages = [
 ];
 
 export default function Game() {
+    getMemoryItems();
     const [cards, setCards] = useState<CardData[]>([]);
     const [gameState, setGameState] = useState<GameState>(
         GameState.difficultyNotSelected

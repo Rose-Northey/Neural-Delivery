@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MemoryApi.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace MemoryApi.Controllers;
 
@@ -16,6 +17,7 @@ public class MemoryItemsController : ControllerBase
     }
 
     // GET: api/MemoryItems
+    [EnableCors("Policy1")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemoryItemDTO>>> GetMemoryItems()
     {
