@@ -1,4 +1,4 @@
-@MemoryApi_HostAddress = http://localhost:5237
+@MemoryApi_HostAddress = https://localhost:7230
 
 GET {{MemoryApi_HostAddress}}/weatherforecast/
 Accept: application/json

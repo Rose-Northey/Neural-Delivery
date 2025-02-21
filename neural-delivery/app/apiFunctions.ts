@@ -1,5 +1,5 @@
 export async function getMemoryItems() {
-    const url = "http://localhost:5237/api/MemoryItems";
+    const url = "https://localhost:7230/api/MemoryItems";
 
     try {
         const response = await fetch(url);
