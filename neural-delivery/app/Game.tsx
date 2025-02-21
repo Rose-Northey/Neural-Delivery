@@ -6,7 +6,11 @@ import WinBanner from "./WinBanner";
 import { colors } from "./colors";
 import DifficultySelect from "./DifficultySelect";
 import shuffleItems from "./shuffleItems";
-import { getMemoryItems } from "./apiFunctions";
+import {
+    getMemoryItems,
+    getMemoryItemsById,
+    postMemoryItems,
+} from "./apiFunctions";
 
 export type CardData = {
     image: string;
@@ -38,7 +42,6 @@ const allImages = [
 ];
 
 export default function Game() {
-    getMemoryItems();
     const [cards, setCards] = useState<CardData[]>([]);
     const [gameState, setGameState] = useState<GameState>(
         GameState.difficultyNotSelected
@@ -58,6 +61,7 @@ export default function Game() {
         async function winSequence() {
             if (gameState === GameState.inProgress && determineIfIsWon()) {
                 await pause(500);
+                postMemoryItems(findCurrentDifficulty(), userMoves);
                 setGameState(GameState.isWon);
             }
         }
@@ -78,6 +82,19 @@ export default function Game() {
         }
         simulateUserClick();
     }, [replayIndex]);
+
+    function findCurrentDifficulty(): string {
+        if (cards.length === 4) {
+            return "easiest";
+        } else if (cards.length === 12) {
+            return "easy";
+        } else if (cards.length === 16) {
+            return "medium";
+        } else if (cards.length === 12) {
+            return "hard";
+        }
+        return "unknown";
+    }
 
     function generateCards(numberofCards = cards.length) {
         const numberOfCardPairs = numberofCards / 2;

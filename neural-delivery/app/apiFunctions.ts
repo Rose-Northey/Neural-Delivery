@@ -1,6 +1,5 @@
 export async function getMemoryItems() {
     const url = "https://localhost:7230/api/MemoryItems";
-
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -9,7 +8,51 @@ export async function getMemoryItems() {
         }
         const json = await response.json();
         console.log(json);
-        console.log("hey");
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        }
+    }
+}
+
+export async function getMemoryItemsById(id: number) {
+    const url = `https://localhost:7230/api/MemoryItems/${id}`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            console.error(`Error: ${response.status} ${response.statusText}`);
+            throw new Error(`uh oh`);
+        }
+        const json = await response.json();
+        console.log(json);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        }
+    }
+}
+
+export async function postMemoryItems(Difficulty: string, UserMoves: number[]) {
+    const url = `https://localhost:7230/api/MemoryItems`;
+    const postObject = {
+        Difficulty,
+        UserMoves,
+    };
+    try {
+        const response = await fetch(url, {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify(postObject),
+        });
+        if (!response.ok) {
+            console.error(`Error: ${response.status} ${response.statusText}`);
+            throw new Error(`uh oh`);
+        }
+        const json = await response.json();
+        console.log(json);
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
