@@ -1,3 +1,5 @@
+import { CardData } from "./Game";
+
 export async function getMemoryItems() {
     const url = "https://localhost:7230/api/MemoryItems";
     try {
@@ -32,11 +34,16 @@ export async function getMemoryItemsById(id: number) {
     }
 }
 
-export async function postMemoryItems(Difficulty: string, UserMoves: number[]) {
+export async function postMemoryItems(
+    Difficulty: string,
+    UserMoves: number[],
+    Cards: CardData[]
+) {
     const url = `https://localhost:7230/api/MemoryItems`;
     const postObject = {
         Difficulty,
         UserMoves,
+        CardIdLayout: findIdLayout(Cards),
     };
     try {
         const response = await fetch(url, {
@@ -58,4 +65,10 @@ export async function postMemoryItems(Difficulty: string, UserMoves: number[]) {
             console.error(error.message);
         }
     }
+}
+
+function findIdLayout(Cards: CardData[]) {
+    return Cards.map((card) => {
+        return card.id;
+    });
 }

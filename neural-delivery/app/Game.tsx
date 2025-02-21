@@ -61,7 +61,11 @@ export default function Game() {
         async function winSequence() {
             if (gameState === GameState.inProgress && determineIfIsWon()) {
                 await pause(500);
-                postMemoryItems(findCurrentDifficulty(), userMoves);
+                await postMemoryItems(
+                    findCurrentDifficulty(),
+                    userMoves,
+                    cards
+                );
                 setGameState(GameState.isWon);
             }
         }
