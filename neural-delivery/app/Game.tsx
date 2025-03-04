@@ -41,6 +41,12 @@ const allImages = [
     "/images/alligator.jpg",
 ];
 
+const allImageIds = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24,
+];
+
+// blackcat is 1 and 2 -> ids
 export default function Game() {
     const [cards, setCards] = useState<CardData[]>([]);
     const [gameState, setGameState] = useState<GameState>(
@@ -102,6 +108,9 @@ export default function Game() {
 
     function generateCards(numberofCards = cards.length) {
         const numberOfCardPairs = numberofCards / 2;
+        // first it gives me the right number of images
+        // then I assign Ids to them
+
         const imagesInThisRound = shuffleItems(allImages).slice(
             0,
             numberOfCardPairs
@@ -109,21 +118,23 @@ export default function Game() {
         let idCounter = 0;
         const newCards: CardData[] = [];
         imagesInThisRound.forEach((image) => {
+            // find what number the image is within the array
+            // assign ids after they are shuffled
+            const firstImageId = allImages.findIndex((img) => img === image);
             const cardData1 = {
-                image: image,
-                isMatched: false,
-                isSelected: false,
-                id: idCounter,
+                imageId: firstImageId,
             };
             idCounter++;
             const cardData2 = {
-                image: image,
-                isMatched: false,
-                isSelected: false,
-                id: idCounter,
+                imageId: firstImageId + 1,
             };
             idCounter++;
             newCards.push(cardData1, cardData2);
+        });
+        shuffleItems(newCards).map((cardData, i) => {
+            cardData.isMatched = false;
+            cardData.isSelected = false;
+            cardData.positionId = i;
         });
         setCards(shuffleItems(newCards));
     }
