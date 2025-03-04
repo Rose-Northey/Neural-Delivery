@@ -69,6 +69,6 @@ export async function postMemoryItems(
 
 function findIdLayout(Cards: CardData[]) {
     return Cards.map((card) => {
-        return card.id;
+        return card.imageId;
     });
 }

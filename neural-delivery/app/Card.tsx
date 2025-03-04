@@ -1,9 +1,8 @@
 import { css, cx } from "@emotion/css";
-import { Component } from "react";
 
 interface NewCardProps {
     image: string;
-    id: number;
+    imageId: number;
     onUnknownCardClick: (cardId: number, image: string) => void;
     isSelected: boolean;
     isMatched: boolean;
@@ -12,7 +11,7 @@ interface NewCardProps {
 
 export default function Card({
     image,
-    id,
+    imageId,
     onUnknownCardClick,
     isSelected,
     isMatched,
@@ -34,7 +33,7 @@ export default function Card({
                         onClick={() =>
                             isSelected || isMatched || isInReplayMode
                                 ? null
-                                : onUnknownCardClick(id, image)
+                                : onUnknownCardClick(imageId, image)
                         }
                         className={cardStyling.frontOfCard.default}
                         src="/images/unknown.jpg"

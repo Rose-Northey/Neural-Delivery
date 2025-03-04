@@ -6,17 +6,16 @@ import WinBanner from "./WinBanner";
 import { colors } from "./colors";
 import DifficultySelect from "./DifficultySelect";
 import shuffleItems from "./shuffleItems";
-import {
-    getMemoryItems,
-    getMemoryItemsById,
-    postMemoryItems,
-} from "./apiFunctions";
+import { postMemoryItems } from "./apiFunctions";
 
 export type CardData = {
     image: string;
+    imageId: number;
     isMatched: boolean;
     isSelected: boolean;
-    id: number;
+};
+export type emptyCardData = {
+    imageId: number;
 };
 
 export enum GameState {
@@ -26,24 +25,19 @@ export enum GameState {
     isInReplay,
 }
 
-const allImages = [
-    "/images/blackCat.jpg",
-    "/images/horse.jpg",
-    "/images/box.jpg",
-    "/images/uke.jpg",
-    "/images/plant.jpg",
-    "/images/duck.jpg",
-    "/images/capybara.jpg",
-    "/images/midnight.jpg",
-    "/images/tomato.jpg",
-    "/images/toothbrush.jpg",
-    "/images/boredom.jpg",
-    "/images/alligator.jpg",
-];
-
-const allImageIds = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-    22, 23, 24,
+const allImagesAndIds = [
+    { image: "/images/blackCat.jpg", imageIds: [1, 2] },
+    { image: "/images/horse.jpg", imageIds: [3, 4] },
+    { image: "/images/box.jpg", imageIds: [5, 6] },
+    { image: "/images/uke.jpg", imageIds: [7, 8] },
+    { image: "/images/plant.jpg", imageIds: [9, 10] },
+    { image: "/images/duck.jpg", imageIds: [11, 12] },
+    { image: "/images/capybara.jpg", imageIds: [13, 14] },
+    { image: "/images/midnight.jpg", imageIds: [15, 16] },
+    { image: "/images/tomato.jpg", imageIds: [17, 18] },
+    { image: "/images/toothbrush.jpg", imageIds: [19, 20] },
+    { image: "/images/boredom.jpg", imageIds: [21, 22] },
+    { image: "/images/alligator.jpg", imageIds: [23, 24] },
 ];
 
 // blackcat is 1 and 2 -> ids
@@ -108,33 +102,31 @@ export default function Game() {
 
     function generateCards(numberofCards = cards.length) {
         const numberOfCardPairs = numberofCards / 2;
-        // first it gives me the right number of images
-        // then I assign Ids to them
 
-        const imagesInThisRound = shuffleItems(allImages).slice(
+        const imagesInThisRound = shuffleItems(allImagesAndIds).slice(
             0,
             numberOfCardPairs
         );
         let idCounter = 0;
         const newCards: CardData[] = [];
-        imagesInThisRound.forEach((image) => {
+        imagesInThisRound.forEach((imageData) => {
             // find what number the image is within the array
             // assign ids after they are shuffled
-            const firstImageId = allImages.findIndex((img) => img === image);
             const cardData1 = {
-                imageId: firstImageId,
+                image: imageData.image,
+                imageId: imageData.imageIds[0],
+                isMatched: false,
+                isSelected: false,
             };
             idCounter++;
             const cardData2 = {
-                imageId: firstImageId + 1,
+                image: imageData.image,
+                imageId: imageData.imageIds[1],
+                isMatched: false,
+                isSelected: false,
             };
             idCounter++;
             newCards.push(cardData1, cardData2);
-        });
-        shuffleItems(newCards).map((cardData, i) => {
-            cardData.isMatched = false;
-            cardData.isSelected = false;
-            cardData.positionId = i;
         });
         setCards(shuffleItems(newCards));
     }
@@ -153,7 +145,7 @@ export default function Game() {
     function markCurrentCardAsSelected(cardId: number) {
         setCards((prevCards) =>
             prevCards.map((card) => {
-                if (card.id === cardId) {
+                if (card.imageId === cardId) {
                     return { ...card, isSelected: true };
                 }
                 return card;
@@ -182,7 +174,7 @@ export default function Game() {
 
     async function handleUnknownCardClick(currentCardId: number) {
         const currentSelectedImage = cards.find(
-            (card) => card.id === currentCardId
+            (card) => card.imageId === currentCardId
         )?.image;
         const previouslySelectedCards = cards.filter(
             (card) => card.isSelected === true
@@ -285,9 +277,9 @@ export default function Game() {
                         {cards.map((cardData) => {
                             return (
                                 <Card
-                                    key={cardData.id}
+                                    key={cardData.imageId}
                                     onUnknownCardClick={handleUnknownCardClick}
-                                    id={cardData.id}
+                                    imageId={cardData.imageId}
                                     image={cardData.image}
                                     isSelected={cardData.isSelected}
                                     isMatched={cardData.isMatched}
