@@ -40,7 +40,6 @@ const allImagesAndIds = [
     { image: "/images/alligator.jpg", imageIds: [23, 24] },
 ];
 
-// blackcat is 1 and 2 -> ids
 export default function Game() {
     const [cards, setCards] = useState<CardData[]>([]);
     const [gameState, setGameState] = useState<GameState>(
@@ -110,8 +109,6 @@ export default function Game() {
         let idCounter = 0;
         const newCards: CardData[] = [];
         imagesInThisRound.forEach((imageData) => {
-            // find what number the image is within the array
-            // assign ids after they are shuffled
             const cardData1 = {
                 image: imageData.image,
                 imageId: imageData.imageIds[0],
