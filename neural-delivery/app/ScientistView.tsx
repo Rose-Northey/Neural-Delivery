@@ -21,9 +21,11 @@ export default function ScientistView() {
                         <div>{`difficulty: ${game.difficulty}`}</div>
                         <div>{`total moves:${game.userMoves.length / 2}`}</div>
                         <button onClick={handleViewThisGameClick}>
-                            View This Game
+                            Replay This Game
                         </button>
-                        <Game initialGameState={GameState.isInReplay} />
+                        <Game
+                            initialGameState={GameState.isInStaticScientistView}
+                        />
                     </div>
                 );
             })}

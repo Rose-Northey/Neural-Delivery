@@ -60,7 +60,8 @@ const style = (isInReplayMode: boolean) => {
     return {
         outerContainer: {
             default: css({
-                width: "150px",
+                maxWidth: "150px",
+                minWidth: "20px",
                 aspectRatio: "1",
                 perspective: "1000px",
             }),

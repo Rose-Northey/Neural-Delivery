@@ -1,6 +1,6 @@
 import { css } from "@emotion/css";
 import { colors } from "./colors";
-import { GameState } from "./Game";
+import { GameState } from "./models";
 
 type DifficultySelectProps = {
     gameState: GameState;

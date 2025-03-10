@@ -38,6 +38,15 @@ export default function Game({
 
     useEffect(() => {
         async function winSequence() {
+            if (gameState === GameState.isInStaticScientistView) {
+                revealAllCards();
+            }
+        }
+        winSequence();
+    }, [gameState]);
+
+    useEffect(() => {
+        async function winSequence() {
             if (gameState === GameState.inProgress && determineIfIsWon()) {
                 await pause(500);
                 await postMemoryItems(
@@ -134,6 +143,14 @@ export default function Game({
         setCards((prevCards) =>
             prevCards.map((card) => {
                 return { ...card, isMatched: false };
+            })
+        );
+    }
+
+    function revealAllCards() {
+        setCards((prevCards) =>
+            prevCards.map((card) => {
+                return { ...card, isMatched: true };
             })
         );
     }
@@ -250,10 +267,10 @@ export default function Game({
                     gameState === GameState.isWon ||
                     gameState === GameState.isInReplay
                         ? cx(
-                              styles.gameContainer.winState,
-                              styles.gameContainer.default
+                              styles().gameContainer.winState,
+                              styles().gameContainer.default
                           )
-                        : styles.gameContainer.default
+                        : styles().gameContainer.default
                 }
             >
                 <DifficultySelect
@@ -266,8 +283,8 @@ export default function Game({
                     moveCount={Math.floor(userMoves.length / 2)}
                     gameState={gameState}
                 />
-                <div className={styles.gridAndControlsContainer}>
-                    <div className={styles.grid.default}>
+                <div className={styles().gridAndControlsContainer}>
+                    <div className={styles().grid.default}>
                         {cards.map((cardData) => {
                             return (
                                 <Card
@@ -297,44 +314,46 @@ export default function Game({
     );
 }
 
-const styles = {
-    gameContainer: {
-        default: css({
-            minHeight: "90%",
-            width: "100%",
-            position: "relative",
+const styles = (isInScientistView = false) => {
+    return {
+        gameContainer: {
+            default: css({
+                minHeight: "90%",
+                width: "100%",
+                position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: colors.midBlue,
+                transition: "background-color 0.5s ease",
+            }),
+            winState: css({
+                "&&": {
+                    backgroundColor: colors.blackBlue,
+                },
+            }),
+        },
+
+        gridAndControlsContainer: css({
             display: "flex",
+            padding: "1rem",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: colors.midBlue,
-            transition: "background-color 0.5s ease",
+            height: "90%",
         }),
-        winState: css({
-            "&&": {
-                backgroundColor: colors.blackBlue,
-            },
-        }),
-    },
-
-    gridAndControlsContainer: css({
-        display: "flex",
-        padding: "1rem",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "90%",
-    }),
-    grid: {
-        default: css({
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-            justifyContent: "center",
-            maxWidth: "630px",
-        }),
-    },
-    controls: {
-        winState: css({
-            display: "hidden",
-        }),
-    },
+        grid: {
+            default: css({
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "0.5rem",
+                justifyContent: "center",
+                maxWidth: "630px",
+            }),
+        },
+        controls: {
+            winState: css({
+                display: "hidden",
+            }),
+        },
+    };
 };
