@@ -1,6 +1,8 @@
 import { css } from "@emotion/css";
 import { getMemoryItems } from "./apiFunctions";
 import { useQuery } from "@tanstack/react-query";
+import Game from "./Game";
+import { GameState } from "./models";
 
 export default function ScientistView() {
     const { data, error, isLoading } = useQuery({
@@ -21,6 +23,7 @@ export default function ScientistView() {
                         <button onClick={handleViewThisGameClick}>
                             View This Game
                         </button>
+                        <Game initialGameState={GameState.isInReplay} />
                     </div>
                 );
             })}
@@ -43,3 +46,8 @@ const previousGameButtons = css({
         maxWidth: "5rem",
     },
 });
+
+/*when you click view this game you see a replay pop up just underneth
+view the game box. 
+instead of generate cards, another funtion is created - assemblePastDeck
+*/

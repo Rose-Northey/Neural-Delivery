@@ -7,47 +7,25 @@ import { colors } from "./colors";
 import DifficultySelect from "./DifficultySelect";
 import shuffleItems from "./shuffleItems";
 import { postMemoryItems } from "./apiFunctions";
+import { CardData, GameState } from "./models";
+import { allImagesAndIds } from "./allImagesAndIds";
 
-export type CardData = {
-    image: string;
-    imageId: number;
-    isMatched: boolean;
-    isSelected: boolean;
-};
-export type emptyCardData = {
-    imageId: number;
-};
-
-export enum GameState {
-    difficultyNotSelected,
-    inProgress,
-    isWon,
-    isInReplay,
-    isInScientistView,
-    iaInScientistViewReplay,
+interface GameProps {
+    initialGameState?: GameState;
+    initialCardIds?: number[];
+    initialUserMoves?: number[];
 }
 
-const allImagesAndIds = [
-    { image: "/images/blackCat.jpg", imageIds: [1, 2] },
-    { image: "/images/horse.jpg", imageIds: [3, 4] },
-    { image: "/images/box.jpg", imageIds: [5, 6] },
-    { image: "/images/uke.jpg", imageIds: [7, 8] },
-    { image: "/images/plant.jpg", imageIds: [9, 10] },
-    { image: "/images/duck.jpg", imageIds: [11, 12] },
-    { image: "/images/capybara.jpg", imageIds: [13, 14] },
-    { image: "/images/midnight.jpg", imageIds: [15, 16] },
-    { image: "/images/tomato.jpg", imageIds: [17, 18] },
-    { image: "/images/toothbrush.jpg", imageIds: [19, 20] },
-    { image: "/images/boredom.jpg", imageIds: [21, 22] },
-    { image: "/images/alligator.jpg", imageIds: [23, 24] },
-];
-
-export default function Game() {
-    const [cards, setCards] = useState<CardData[]>([]);
-    const [gameState, setGameState] = useState<GameState>(
-        GameState.difficultyNotSelected
+export default function Game({
+    initialGameState = GameState.difficultyNotSelected,
+    initialUserMoves = [],
+    initialCardIds,
+}: GameProps) {
+    const [cards, setCards] = useState<CardData[]>(
+        initialCardIds ? reassembleCards(initialCardIds) : []
     );
-    const [userMoves, setUserMoves] = useState<number[]>([]);
+    const [gameState, setGameState] = useState<GameState>(initialGameState);
+    const [userMoves, setUserMoves] = useState<number[]>(initialUserMoves);
     const [replayIndex, setReplayIndex] = useState<number>(-1);
 
     async function pause(milliseconds: number): Promise<void> {
@@ -210,6 +188,23 @@ export default function Game() {
                 setUserMoves((prev) => [...prev, currentCardId]);
             }
         }
+    }
+
+    function reassembleCards(cardIds: number[]) {
+        return cardIds.map((id) => {
+            const image = allImagesAndIds.find((imageObject) => {
+                return (
+                    id === imageObject.imageIds[0] ||
+                    id === imageObject.imageIds[1]
+                );
+            })!.image;
+            return {
+                image: image,
+                imageId: id,
+                isMatched: false,
+                isSelected: false,
+            };
+        });
     }
 
     async function handleResetGameClick() {
