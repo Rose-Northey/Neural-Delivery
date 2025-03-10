@@ -1,17 +1,35 @@
 "use client";
+import { useState } from "react";
 import Game from "./Game";
+import ScientistView from "./ScientistView";
 import Header from "./Header";
+import { css } from "@emotion/css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function Home() {
+    const [isScientistView, setIsScientistView] = useState(false);
+    const queryClient = new QueryClient();
+    const handleToggleViewClick = () => {
+        setIsScientistView(!isScientistView);
+    };
+
     return (
         <>
-            <Header />
-            <Game />
+            <QueryClientProvider client={queryClient}>
+                <button onClick={handleToggleViewClick} className={toggleView}>
+                    Toggle View
+                </button>
+                <Header />
+                {isScientistView ? <ScientistView /> : <Game />}
+            </QueryClientProvider>
         </>
     );
 }
 
-// 3 buttons in the page - easy, medium, hard
-// selecting one button will generate random numbers for that number of cards
-// the array of random numbers is then passed into the conditionally rendered
-// "Game" component
+const toggleView = css({
+    position: "absolute",
+    margin: "1rem",
+    padding: "1px",
+    fontSize: "5px",
+    right: "0",
+});

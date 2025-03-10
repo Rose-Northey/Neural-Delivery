@@ -60,7 +60,7 @@ public class MemoryItemsController : ControllerBase
 
         MemoryItem.Difficulty = MemoryDTO.Difficulty;
         MemoryItem.UserMoves = MemoryDTO.UserMoves;
-        MemoryItem.CardIdLayout = MemoryDTO.CardIdLayout;
+        MemoryItem.PictureIdLayout = MemoryDTO.PictureIdLayout;
 
         try
         {
@@ -85,7 +85,7 @@ public class MemoryItemsController : ControllerBase
         {
             Difficulty = memoryDTO.Difficulty,
             UserMoves = memoryDTO.UserMoves,
-            CardIdLayout = memoryDTO.CardIdLayout,
+            PictureIdLayout = memoryDTO.PictureIdLayout,
         };
 
         _context.MemoryItems.Add(memoryItem);
@@ -125,6 +125,6 @@ public class MemoryItemsController : ControllerBase
            Id = MemoryItem.Id,
            Difficulty = MemoryItem.Difficulty,
            UserMoves = MemoryItem.UserMoves,
-           CardIdLayout = MemoryItem.CardIdLayout,
+           PictureIdLayout = MemoryItem.PictureIdLayout,
        };
 }

@@ -44,7 +44,7 @@ Start by creating a quick wireframe of the game and then create a functional pro
 The Carrier Science Committee loves the prototype but has additional requirements for the final product, for science:
 
 -   All games must record the moves made and the time between each move
--   The move data must get sent to the server so it can be stored in the database
+-   The move data must — get sent to the server so it can be stored in the database
 -   They need a page to view this data
 -   Add a button to "replay" the moves so the scientists can watch and analyze any game
 

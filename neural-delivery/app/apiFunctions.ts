@@ -1,6 +1,13 @@
 import { CardData } from "./Game";
 
-export async function getMemoryItems() {
+export interface MemoryItem {
+    id: number;
+    difficulty: string;
+    userMoves: number[];
+    pictureIdLayout: number[];
+}
+
+export async function getMemoryItems(): Promise<MemoryItem[] | undefined> {
     const url = "https://localhost:7230/api/MemoryItems";
     try {
         const response = await fetch(url);
@@ -9,7 +16,8 @@ export async function getMemoryItems() {
             throw new Error(`uh oh`);
         }
         const json = await response.json();
-        console.log(json);
+        const items = json as MemoryItem[];
+        return items;
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
@@ -43,7 +51,7 @@ export async function postMemoryItems(
     const postObject = {
         Difficulty,
         UserMoves,
-        CardIdLayout: findIdLayout(Cards),
+        PictureIdLayout: findIdLayout(Cards),
     };
     try {
         const response = await fetch(url, {
