@@ -9,7 +9,7 @@ export default function ScientistView() {
     });
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
-
+    const handleViewThisGameClick = () => {};
     return (
         <div className={previousGameButtons}>
             {data?.map((game) => {
@@ -18,7 +18,9 @@ export default function ScientistView() {
                         <div>{`game${game.id}`}</div>
                         <div>{`difficulty: ${game.difficulty}`}</div>
                         <div>{`total moves:${game.userMoves.length / 2}`}</div>
-                        <button>Replay this game</button>
+                        <button onClick={handleViewThisGameClick}>
+                            View This Game
+                        </button>
                     </div>
                 );
             })}
@@ -32,6 +34,10 @@ const previousGameButtons = css({
     alignItems: "center",
     gap: "1rem",
     margin: "1rem",
+    "&& > div": {
+        border: "solid green 1pt",
+        padding: "0.5rem",
+    },
     "&& > button": {
         padding: "0.5rem",
         maxWidth: "5rem",

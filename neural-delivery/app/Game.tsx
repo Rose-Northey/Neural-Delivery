@@ -23,6 +23,8 @@ export enum GameState {
     inProgress,
     isWon,
     isInReplay,
+    isInScientistView,
+    iaInScientistViewReplay,
 }
 
 const allImagesAndIds = [
