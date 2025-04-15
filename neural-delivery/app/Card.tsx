@@ -7,6 +7,7 @@ interface NewCardProps {
     isSelected: boolean;
     isMatched: boolean;
     isInReplayMode: boolean;
+    numberInDeck: number;
 }
 
 export default function Card({
@@ -16,8 +17,9 @@ export default function Card({
     isSelected,
     isMatched,
     isInReplayMode,
+    numberInDeck,
 }: NewCardProps) {
-    const cardStyling = style(isInReplayMode);
+    const cardStyling = style(isInReplayMode, numberInDeck);
     return (
         <>
             <div className={cardStyling.outerContainer.default}>
@@ -56,12 +58,11 @@ export default function Card({
     );
 }
 
-const style = (isInReplayMode: boolean) => {
+const style = (isInReplayMode: boolean, numberInDeck: number) => {
     return {
         outerContainer: {
             default: css({
-                maxWidth: "150px",
-                minWidth: "20px",
+                width: numberInDeck === 4 ? "45%" : "22%",
                 aspectRatio: "1",
                 perspective: "1000px",
             }),
@@ -88,7 +89,7 @@ const style = (isInReplayMode: boolean) => {
                 boxShadow: "0 0 0 2px #0066b2",
                 zIndex: "2",
                 "&:hover": {
-                    boxShadow: isInReplayMode ? "none" : "0 0 0 2px #7d90a1",
+                    boxShadow: isInReplayMode ? "none" : "0 0 0 3px #7d90a1",
                 },
                 backfaceVisibility: "hidden",
             }),

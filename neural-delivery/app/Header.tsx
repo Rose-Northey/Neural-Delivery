@@ -17,7 +17,7 @@ export default class Header extends Component {
 }
 
 const headerContainer = css({
-    minHeight: "10%",
+    height: "15%",
     backgroundColor: colors.darkBlue,
     color: colors.lightBlue,
     display: "flex",

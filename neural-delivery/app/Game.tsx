@@ -12,18 +12,18 @@ import { allImagesAndIds } from "./allImagesAndIds";
 
 interface GameProps {
     initialGameState?: GameState;
-    initialCardIds?: number[];
+    initialCards?: CardData[];
     initialUserMoves?: number[];
+    isScientistView?: boolean;
 }
 
 export default function Game({
     initialGameState = GameState.difficultyNotSelected,
     initialUserMoves = [],
-    initialCardIds,
+    initialCards = [],
+    isScientistView = false,
 }: GameProps) {
-    const [cards, setCards] = useState<CardData[]>(
-        initialCardIds ? reassembleCards(initialCardIds) : []
-    );
+    const [cards, setCards] = useState<CardData[]>(initialCards);
     const [gameState, setGameState] = useState<GameState>(initialGameState);
     const [userMoves, setUserMoves] = useState<number[]>(initialUserMoves);
     const [replayIndex, setReplayIndex] = useState<number>(-1);
@@ -82,7 +82,7 @@ export default function Game({
             return "easy";
         } else if (cards.length === 16) {
             return "medium";
-        } else if (cards.length === 12) {
+        } else if (cards.length === 20) {
             return "hard";
         }
         return "unknown";
@@ -207,23 +207,6 @@ export default function Game({
         }
     }
 
-    function reassembleCards(cardIds: number[]) {
-        return cardIds.map((id) => {
-            const image = allImagesAndIds.find((imageObject) => {
-                return (
-                    id === imageObject.imageIds[0] ||
-                    id === imageObject.imageIds[1]
-                );
-            })!.image;
-            return {
-                image: image,
-                imageId: id,
-                isMatched: false,
-                isSelected: false,
-            };
-        });
-    }
-
     async function handleResetGameClick() {
         setUserMoves([]);
         setGameState(GameState.inProgress);
@@ -267,10 +250,13 @@ export default function Game({
                     gameState === GameState.isWon ||
                     gameState === GameState.isInReplay
                         ? cx(
-                              styles().gameContainer.winState,
-                              styles().gameContainer.default
+                              styles(gameState, isScientistView).gameContainer
+                                  .winState,
+                              styles(gameState, isScientistView).gameContainer
+                                  .default
                           )
-                        : styles().gameContainer.default
+                        : styles(gameState, isScientistView).gameContainer
+                              .default
                 }
             >
                 <DifficultySelect
@@ -283,8 +269,17 @@ export default function Game({
                     moveCount={Math.floor(userMoves.length / 2)}
                     gameState={gameState}
                 />
-                <div className={styles().gridAndControlsContainer}>
-                    <div className={styles().grid.default}>
+                <div
+                    className={
+                        styles(gameState, isScientistView)
+                            .gridAndControlsContainer
+                    }
+                >
+                    <div
+                        className={
+                            styles(gameState, isScientistView).grid.default
+                        }
+                    >
                         {cards.map((cardData) => {
                             return (
                                 <Card
@@ -297,6 +292,7 @@ export default function Game({
                                     isInReplayMode={
                                         gameState === GameState.isInReplay
                                     }
+                                    numberInDeck={cards.length}
                                 />
                             );
                         })}
@@ -314,11 +310,11 @@ export default function Game({
     );
 }
 
-const styles = (isInScientistView = false) => {
+const styles = (gameState: GameState, isScientistView: boolean) => {
     return {
         gameContainer: {
             default: css({
-                minHeight: "90%",
+                height: "85%",
                 width: "100%",
                 position: "relative",
                 display: "flex",
@@ -330,29 +326,28 @@ const styles = (isInScientistView = false) => {
             winState: css({
                 "&&": {
                     backgroundColor: colors.blackBlue,
+                    display: isScientistView ? "" : "none",
                 },
             }),
         },
 
         gridAndControlsContainer: css({
-            display: "flex",
-            padding: "1rem",
+            display:
+                gameState === GameState.difficultyNotSelected ? "none" : "flex",
+            padding: isScientistView ? "0.2rem" : "1rem",
             justifyContent: "center",
             alignItems: "center",
             height: "90%",
+            width: "100%",
         }),
         grid: {
             default: css({
                 display: "flex",
                 flexWrap: "wrap",
-                gap: "0.5rem",
+                gap: isScientistView ? "0.1rem" : "0.5rem",
                 justifyContent: "center",
-                maxWidth: "630px",
-            }),
-        },
-        controls: {
-            winState: css({
-                display: "hidden",
+                maxHeight: "100%",
+                minWidth: isScientistView ? "100%" : "40%",
             }),
         },
     };

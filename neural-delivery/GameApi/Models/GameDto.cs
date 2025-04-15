@@ -1,5 +1,5 @@
-namespace MemoryApi.Models;
-public class MemoryItemDTO
+namespace GameApi.Models;
+public class GameDto
 {
     public long Id {get; set;}
     public required string Difficulty{get;set;}

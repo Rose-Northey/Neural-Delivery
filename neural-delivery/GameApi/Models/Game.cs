@@ -1,6 +1,9 @@
-namespace MemoryApi.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class MemoryItem
+namespace GameApi.Models;
+
+public class Game
 {
     public long Id{get;set;}
     public required string Difficulty{get;set;}

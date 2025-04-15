@@ -43,7 +43,8 @@ const styles = {
         backgroundColor: colors.lightBlue,
         padding: "1rem",
         gap: "1rem",
-        height: "100%",
+        height: "150px",
+        width: "180px",
         margin: "1rem",
     }),
     countContainer: css({
