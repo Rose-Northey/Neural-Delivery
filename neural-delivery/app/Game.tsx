@@ -6,7 +6,7 @@ import WinBanner from "./WinBanner";
 import { colors } from "./colors";
 import DifficultySelect from "./DifficultySelect";
 import shuffleItems from "./shuffleItems";
-import { postMemoryItems } from "./apiFunctions";
+import { postGames } from "./apiFunctions";
 import { CardData, GameState } from "./models";
 import { allImagesAndIds } from "./allImagesAndIds";
 
@@ -49,11 +49,7 @@ export default function Game({
         async function winSequence() {
             if (gameState === GameState.inProgress && determineIfIsWon()) {
                 await pause(500);
-                await postMemoryItems(
-                    findCurrentDifficulty(),
-                    userMoves,
-                    cards
-                );
+                await postGames(findCurrentDifficulty(), userMoves, cards);
                 setGameState(GameState.isWon);
             }
         }

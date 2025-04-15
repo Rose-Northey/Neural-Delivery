@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { getMemoryItems } from "./apiFunctions";
+import { getGames } from "./apiFunctions";
 import { useQuery } from "@tanstack/react-query";
 import Game from "./Game";
 import { CardData, GameState } from "./models";
@@ -8,7 +8,7 @@ import { allImagesAndIds } from "./allImagesAndIds";
 export default function ScientistView() {
     const { data, error, isLoading } = useQuery({
         queryKey: ["previousGames"],
-        queryFn: getMemoryItems,
+        queryFn: getGames,
     });
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;

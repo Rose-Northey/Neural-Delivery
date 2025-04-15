@@ -1,4 +1,4 @@
-import { CardData } from "./Game";
+import { CardData } from "./models";
 
 export interface MemoryItem {
     id: number;
@@ -7,8 +7,8 @@ export interface MemoryItem {
     pictureIdLayout: number[];
 }
 
-export async function getMemoryItems(): Promise<MemoryItem[] | undefined> {
-    const url = "https://localhost:7230/api/MemoryItems";
+export async function getGames(): Promise<MemoryItem[] | undefined> {
+    const url = "https://localhost:7230/api/Games";
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -25,8 +25,8 @@ export async function getMemoryItems(): Promise<MemoryItem[] | undefined> {
     }
 }
 
-export async function getMemoryItemsById(id: number) {
-    const url = `https://localhost:7230/api/MemoryItems/${id}`;
+export async function getGamesById(id: number) {
+    const url = `https://localhost:7230/api/Games/${id}`;
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -42,12 +42,12 @@ export async function getMemoryItemsById(id: number) {
     }
 }
 
-export async function postMemoryItems(
+export async function postGames(
     Difficulty: string,
     UserMoves: number[],
     Cards: CardData[]
 ) {
-    const url = `https://localhost:7230/api/MemoryItems`;
+    const url = `https://localhost:7230/api/Games`;
     const postObject = {
         Difficulty,
         UserMoves,
