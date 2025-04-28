@@ -37,12 +37,12 @@ export default function Game({
     }
 
     useEffect(() => {
-        async function winSequence() {
+        async function useScientistView() {
             if (gameState === GameState.isInStaticScientistView) {
                 revealAllCards();
             }
         }
-        winSequence();
+        useScientistView();
     }, [gameState]);
 
     useEffect(() => {
@@ -255,16 +255,19 @@ export default function Game({
                               .default
                 }
             >
-                <DifficultySelect
-                    onDifficultySelectionClick={onDifficultySelectionClick}
-                    gameState={gameState}
-                />
-                <WinBanner
-                    onResetGameClick={handleResetGameClick}
-                    onReplayClick={handleReplayClick}
-                    moveCount={Math.floor(userMoves.length / 2)}
-                    gameState={gameState}
-                />
+                {gameState === GameState.difficultyNotSelected ? (
+                    <DifficultySelect
+                        onDifficultySelectionClick={onDifficultySelectionClick}
+                    />
+                ) : null}
+                {gameState === GameState.isWon ? (
+                    <WinBanner
+                        onResetGameClick={handleResetGameClick}
+                        onReplayClick={handleReplayClick}
+                        moveCount={Math.floor(userMoves.length / 2)}
+                    />
+                ) : null}
+
                 <div
                     className={
                         styles(gameState, isScientistView)
@@ -320,10 +323,7 @@ const styles = (gameState: GameState, isScientistView: boolean) => {
                 transition: "background-color 0.5s ease",
             }),
             winState: css({
-                "&&": {
-                    backgroundColor: colors.blackBlue,
-                    display: isScientistView ? "" : "none",
-                },
+                "&&": { backgroundColor: colors.blackBlue },
             }),
         },
 

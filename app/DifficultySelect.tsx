@@ -1,5 +1,6 @@
 import { css } from "@emotion/css";
 import { colors } from "./colors";
+import { GameState } from "./models";
 
 type DifficultySelectProps = {
     onDifficultySelectionClick: (numberOfCards: number) => void;

@@ -1,5 +1,6 @@
 import { css, cx } from "@emotion/css";
 import { colors } from "./colors";
+import { GameState } from "./models";
 
 type WinBannerProps = {
     onResetGameClick: () => void;
