@@ -63,8 +63,10 @@ export default function Game({
 
                 if (replayIndex < userMoves.length) {
                     setReplayIndex((prev) => prev + 1);
-                } else if (replayIndex === userMoves.length) {
+                } else if (!isScientistView && replayIndex === userMoves.length) {
                     setGameState(GameState.isWon);
+                }else if(isScientistView && replayIndex === userMoves.length) {
+                    setGameState(GameState.isInStaticScientistView)
                 }
             }
         }
@@ -241,6 +243,8 @@ export default function Game({
 
     return (
         <>
+        <div className={styles(gameState, isScientistView).page}>
+            {isScientistView?<button onClick={handleReplayClick}>replay this game</button>:null}
             <div
                 className={
                     gameState === GameState.isWon ||
@@ -255,6 +259,7 @@ export default function Game({
                               .default
                 }
             >
+                
                 {gameState === GameState.difficultyNotSelected ? (
                     <DifficultySelect
                         onDifficultySelectionClick={onDifficultySelectionClick}
@@ -267,7 +272,6 @@ export default function Game({
                         moveCount={Math.floor(userMoves.length / 2)}
                     />
                 ) : null}
-
                 <div
                     className={
                         styles(gameState, isScientistView)
@@ -305,6 +309,7 @@ export default function Game({
                     />
                 </div>
             </div>
+            </div>
         </>
     );
 }
@@ -313,7 +318,7 @@ const styles = (gameState: GameState, isScientistView: boolean) => {
     return {
         gameContainer: {
             default: css({
-                height: "85%",
+                height: "100%",
                 width: "100%",
                 position: "relative",
                 display: "flex",
@@ -346,5 +351,13 @@ const styles = (gameState: GameState, isScientistView: boolean) => {
                 minWidth: isScientistView ? "100%" : "40%",
             }),
         },
+        page:css({
+            height:"85%",
+            width:"100%",
+            display:"flex",
+            flexDirection:"column",
+            alignItems:"center"
+        })
+        
     };
 };

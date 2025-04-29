@@ -14,8 +14,6 @@ export default function ScientistView() {
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
-    const handleViewThisGameClick = () => {};
-
     function generateCardData(cardIds: number[]): CardData[] {
         return cardIds.map((pictureId) => {
             const imageFile = allImagesAndIds.find((imageAndIdObject) => {
@@ -43,13 +41,11 @@ export default function ScientistView() {
                         <div>{`Game ${game.id}`}</div>
                         <div>{`difficulty: ${game.difficulty}`}</div>
                         <div>{`total moves:${game.userMoves.length / 2}`}</div>
-                        <button onClick={handleViewThisGameClick}>
-                            replay this game
-                        </button>
                         <Game
                             initialCards={cards}
                             initialGameState={GameState.isInStaticScientistView}
                             isScientistView={true}
+                            initialUserMoves={game.userMoves}
                         />
                     </div>
                 );
@@ -86,17 +82,17 @@ const gameCard = (difficulty: string)=>css({
         alignItems:"center"
 
     },
-    "&& > button": {
+    "&& >  div > button": {
         margin: "0.5rem",
         maxWidth: "10rem",
         backgroundColor: colors.lightBlue,
         borderColor:colors.darkBlue,
         padding: "0.5rem",
     },
-    "&&&> button:hover":{
+    "&&& > div > button:hover":{
         backgroundColor: colors.orange,
     },
-    "&&&> button:active":{
+    "&&& >  div > button:active":{
         borderColor: colors.orange,
     }
 
